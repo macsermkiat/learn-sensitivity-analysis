@@ -9,7 +9,7 @@
 - User reported they "can't understand the lessons well" and asked to make them EASIER with
   MORE explanation. The original L01–L05 were built for a "statistically sophisticated, skip
   remedial stats" reader — that pitch was TOO HIGH in practice.
-- New house style (applied to L01 first as the template; roll out to L02–L05 after user confirms):
+- New house style (now applied to ALL of L01–L05):
   - Lead with a concrete clinical STORY, not the abstract assumption.
   - Unpack EVERY jargon term in plain words the first time it appears (blue `.plain` boxes:
     "In plain words ...").
@@ -52,6 +52,14 @@
 - L03's core trap: Γ is the treatment-leg only; don't read it as full confounder strength.
 - L04 is THE mission skill (read RV + contour, benchmark vs measured covariates, transfers to ML).
 - L05's fluency test: negative controls DETECT a footprint; they don't QUANTIFY bias.
+
+## Review pass (2026-06-10)
+- Fixed L03 circular sentence in the smoking example ("smokers more likely to be smokers").
+- L01: added OR/HR → RR conversion aside (rare outcome ≈ RR; common outcome √OR) + decoder entry —
+  papers mostly report OR/HR, and unconverted common-outcome ORs inflate E-values.
+- NEW `reference/checklist.html` — one-page critique checklist (all five families + red flags),
+  linked from index and L05; the take-to-a-real-paper capstone.
+- Glossary: added ATE, U-comparability, NCO/NCE flavours under Negative control.
 
 ## Candidate next moves (post-arc)
 - Live critique of a real paper's sensitivity section (the wisdom step — see RESOURCES communities).

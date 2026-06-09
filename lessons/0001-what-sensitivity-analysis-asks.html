@@ -171,6 +171,8 @@
   </div>
 </div>
 
+<div class="plain"><span class="lab">In plain words</span> <strong>What if the paper reports an odds ratio (OR) or hazard ratio (HR) instead?</strong> Most clinical papers do. If the outcome is rare (roughly under 15%), OR and HR are close enough to RR — plug them straight into the formula. If the outcome is common, an OR exaggerates the RR; the standard fix is to use <strong>√OR</strong> as the RR first (so OR = 4 → RR ≈ 2), then compute E as usual. Exact conversions for every scale are in the evalue-package paper.<a class="cite" href="https://journals.sagepub.com/doi/10.1177/1536867X20909696" target="_blank">[2]</a> Using a common-outcome OR without converting is a real mistake people make — it inflates the E-value and makes the result look more robust than it is.</div>
+
 <h2><span class="n">4</span>Reading one in the wild — four reflexes</h2>
 <p>Being fluent here is mostly about <em>not getting fooled</em>. When you see an E-value in a paper, run these four checks:</p>
 <p><strong>1. Benchmark it — a number alone means nothing.</strong> An E-value of 3.4 is only impressive if a confounder that strong is implausible. Compare it to the strength of the confounders the authors <em>did</em> measure and adjust for. If a hidden confounder no stronger than one they already controlled would clear the bar, the result is fragile — no matter how big the raw E-value looks.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[3]</a></p>
@@ -189,6 +191,7 @@
     <dt>Risk ratio (RR)</dt><dd>How many times more (or less) likely the outcome is in the treated vs. untreated group. RR = 2 means twice as likely; RR = 1 means no difference.</dd>
     <dt>E-value</dt><dd>The smallest confounder strength (on the RR scale, with both treatment and outcome) needed to fully explain the result away. Bigger = more robust.</dd>
     <dt>CI-limit E-value</dt><dd>The same idea applied to the confidence-interval edge nearest the null: how little confounding to make the result non-significant.</dd>
+    <dt>OR / HR (odds ratio / hazard ratio)</dt><dd>Other common effect scales. Rare outcome: treat OR or HR ≈ RR. Common outcome: convert first (use √OR as the RR) before computing the E-value.</dd>
     <dt>Benchmarking</dt><dd>Judging an E-value by comparing it to the strength of the confounders that were actually measured and adjusted for.</dd>
   </dl>
 </div>

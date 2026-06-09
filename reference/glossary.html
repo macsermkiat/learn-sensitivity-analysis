@@ -66,6 +66,9 @@
   <dt>Unmeasured confounder <span class="alt">(U)</span></dt>
   <dd>A variable associated with <em>both</em> the treatment and the outcome that was not measured/adjusted for. Its existence is what breaks conditional ignorability and biases the estimate. Sensitivity analysis is the study of how much such a U would matter.</dd>
 
+  <dt>ATE <span class="alt">(average treatment effect)</span></dt>
+  <dd>The average difference in outcome if everyone in the population were treated versus if no one were. The usual causal target that bounds, calibrations, and detectors are all protecting.</dd>
+
   <dt>Sensitivity analysis</dt>
   <dd>A set of methods that ask: <strong>how strong would a violation of the no-unmeasured-confounding assumption have to be to overturn my conclusion?</strong> It does not test whether confounding exists; it quantifies the bias required to explain the result away.</dd>
 
@@ -111,6 +114,10 @@
 
   <dt>Negative control <span class="alt">(outcome or exposure)</span></dt>
   <dd>A variable that should have <em>no</em> true causal relationship in the analysis but shares the same confounding structure. A non-null association on the negative control signals residual confounding. A design-based detector rather than a quantifier.</dd>
+  <dd>Two flavours: a <strong>negative-control outcome</strong> (NCO) keeps the real treatment and swaps in an outcome it cannot cause; a <strong>negative-control exposure</strong> (NCE) keeps the real outcome and swaps in an exposure that cannot cause it. A <em>pre-exposure</em> NCO (outcome measured before treatment could act) makes the null hold by time-order alone.</dd>
+
+  <dt>U-comparability</dt>
+  <dd>The assumption that a negative control shares the <em>same</em> unmeasured confounders (U) as the real analysis. Without it, a clean negative control falsely reassures — it was being pushed by different confounders than the question you care about.</dd>
 
   <dt>Tipping-point analysis</dt>
   <dd>Vary an assumption (often about missing data or an unmeasured factor) until the conclusion "tips." Report the value at which it tips and judge whether that value is plausible. A general technique; the E-value is essentially a tipping-point for confounding strength.</dd>

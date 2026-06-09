@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Critique Checklist — Sensitivity Analysis for Causal Inference</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6472; --rule:#e2e6ec; --accent:#3a5a8c;
+    --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8; --bad:#b03333; --badbg:#fbecec;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--bg); line-height:1.6;
+    max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
+  }
+  .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.82rem; margin-bottom:1.6rem; padding-bottom:.8rem; border-bottom:1px solid var(--rule); flex-wrap:wrap}
+  .lnav a{color:var(--accent); text-decoration:none; padding:.32rem .6rem; border:1px solid var(--rule);
+    border-radius:999px; background:#fff}
+  .lnav a:hover{background:var(--chip)}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1rem; margin-bottom:1.6rem}
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
+  h1{font-size:1.9rem; margin:.3rem 0 .4rem; line-height:1.15}
+  .sub{color:var(--muted); font-size:.95rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.05rem; margin:2.2rem 0 .6rem;
+     color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
+  h2 .tag{font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; font-weight:700;
+    color:#fff; background:var(--accent); border-radius:6px; padding:.15rem .45rem; margin-right:.5rem; vertical-align:2px}
+  ul.ck{list-style:none; margin:.6rem 0; padding:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.93rem}
+  ul.ck li{position:relative; padding:.4rem 0 .4rem 1.7rem; border-bottom:1px dashed var(--rule)}
+  ul.ck li:last-child{border-bottom:none}
+  ul.ck li::before{content:""; position:absolute; left:0; top:.62rem; width:.85rem; height:.85rem;
+    border:2px solid var(--accent); border-radius:4px; background:#fff}
+  ul.ck b{color:var(--term)}
+  em{color:var(--term)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85em;
+    background:var(--chip); padding:.08em .35em; border-radius:4px}
+  .flags{background:var(--badbg); border:1px solid #e3b3b3; border-radius:10px; padding:1rem 1.2rem; margin:1.6rem 0}
+  .flags h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .5rem; color:var(--bad)}
+  .flags ul{margin:0; padding-left:1.2rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem}
+  .flags li{margin:.35rem 0}
+  a{color:var(--accent)}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
+    color:var(--muted); font-size:.82rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  @media print{ body{background:#fff; padding:1rem; max-width:none} .lnav{display:none} h2{break-after:avoid} ul.ck li{break-inside:avoid} }
+</style>
+</head>
+<body>
+<nav class="lnav">
+  <a href="../index.html">Home</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="../lessons/0001-what-sensitivity-analysis-asks.html">Lessons</a>
+</nav>
+<header>
+  <div class="kicker">Reference · Take this to a real paper</div>
+  <h1>The Critique Checklist</h1>
+  <div class="sub">Everything from L01–L05 condensed into the questions you ask when a paper claims its result is "robust to unmeasured confounding." Print it, or keep it open beside the paper.</div>
+</header>
+
+<h2><span class="tag">Always</span>Whatever the paper reports</h2>
+<ul class="ck">
+  <li><b>Is there a sensitivity analysis at all?</b> An observational causal claim with no sensitivity analysis is a claim resting silently on "no unmeasured confounding." (L01)</li>
+  <li><b>Which family is it?</b> A <em>bound</em> (range, no assumptions), a <em>calibration</em> (tipping-point number: E-value, RV, Γ), or a <em>detector</em> (negative control)? Naming the family tells you what the number can and cannot mean. (L02)</li>
+  <li><b>Is the number benchmarked?</b> A raw E-value / RV / Γ means nothing alone. Did the authors compare it to the strength of confounders they <em>did</em> measure? If a hidden confounder no stronger than a measured one would tip the result, it is fragile. (L01, L04)</li>
+  <li><b>Does the conclusion language match the number?</b> "Highly robust" should be earned by the weakest link (usually the CI-limit value), not the headline one.</li>
+</ul>
+
+<h2><span class="tag">E-value</span>If the paper reports an E-value (L01)</h2>
+<ul class="ck">
+  <li><b>CI-limit E-value reported too?</b> A big point E-value with a small CI-limit E-value means weak confounding already breaks significance — read the pair, trust the smaller.</li>
+  <li><b>Scale conversion done right?</b> E-values live on the risk-ratio scale. OR/HR with a rare outcome ≈ fine; a common-outcome OR must be converted (√OR) first, or the E-value is inflated.</li>
+  <li><b>Not read as a probability?</b> E = 4 is a strength threshold, never "a 1-in-4 chance the result is spurious."</li>
+  <li><b>Both legs, jointly?</b> The confounder must hit the threshold with treatment <em>and</em> outcome at once, beyond measured covariates.</li>
+</ul>
+
+<h2><span class="tag">Γ</span>If the paper reports a Rosenbaum Γ (L03)</h2>
+<ul class="ck">
+  <li><b>Is the design actually matched?</b> Γ is a matched-design statistic; quoting one for an unmatched estimate is a category error.</li>
+  <li><b>How far above 1?</b> Γ = 1.1–1.3 is fragile; smoking–lung-cancer territory is 5–6. Judge the distance, not the existence, of the number.</li>
+  <li><b>The treatment-leg trap.</b> Γ bounds only the odds of <em>getting treated</em>. Any claim about the confounder's required effect on the <em>outcome</em> needs amplification — a bare Γ is half the story.</li>
+</ul>
+
+<h2><span class="tag">RV</span>If the paper reports a robustness value / contour plot (L04)</h2>
+<ul class="ck">
+  <li><b>Both RVs?</b> The null RV and the significance-boundary RV (the analogue of the CI-limit E-value). The smaller one is the honest one.</li>
+  <li><b>Are measured covariates plotted as benchmarks?</b> A contour plot without covariate dots cannot be judged. If any measured covariate's dot sits past the null curve, an equally ordinary hidden confounder would kill the result.</li>
+  <li><b>ML is not exempt.</b> A DML / causal-ML estimate needs this exact same reading (<code>dml.sensemakr</code>); flexible models do not remove confounding.</li>
+</ul>
+
+<h2><span class="tag">Bounds</span>If the paper reports worst-case bounds (L02)</h2>
+<ul class="ck">
+  <li><b>Which assumptions were purchased?</b> Each narrowing step (monotone response, monotone selection, instrument) must be named and defended, not just applied.</li>
+  <li><b>Wide is not wrong.</b> Bounds that include "no effect" are the honest statement of what the data alone support — dismissing them as "useless" misses the point.</li>
+</ul>
+
+<h2><span class="tag">NC</span>If the paper reports a negative control (L05)</h2>
+<ul class="ck">
+  <li><b>Does the null really hold?</b> If the treatment could plausibly affect the "negative" outcome even a little, a hit is a real effect, not detected bias.</li>
+  <li><b>Is U-comparability argued?</b> The control must share the <em>same</em> confounders as the real analysis — otherwise a clean control falsely reassures.</li>
+  <li><b>Detect ≠ quantify.</b> A clean negative control is "no footprint found," never "proof of no confounding"; a dirty one says bias exists, not how big it is.</li>
+</ul>
+
+<div class="flags">
+  <h3>Instant red flags</h3>
+  <ul>
+    <li>"Robust" claimed from the point E-value alone, CI-limit ignored.</li>
+    <li>A common-outcome odds ratio plugged into the E-value formula unconverted.</li>
+    <li>Γ presented as if it were the confounder's full strength (both legs).</li>
+    <li>A null negative control presented as proof of no confounding.</li>
+    <li>An E-value or RV reported with no benchmarking against measured covariates anywhere.</li>
+    <li>Any sensitivity number read as a probability.</li>
+  </ul>
+</div>
+
+<footer>
+  Built from L01–L05. Sources as cited in each lesson: VanderWeele &amp; Ding (2017); Linden, Mathur &amp; VanderWeele (2020); Manski (1990); Richardson et al. (2014); Rosenbaum; Cinelli &amp; Hazlett (2020); Chernozhukov et al. (2026); Lipsitch et al. (2010).
+</footer>
+</body>
+</html>
