@@ -10,11 +10,12 @@
     --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
     --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
     --warnbg:#fff7e6; --warnrule:#e7c66a;
+    --plainbg:#eef4fb; --plainrule:#bcd2ee;
   }
   *{box-sizing:border-box}
   body{
     font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
+    color:var(--ink); background:var(--bg); line-height:1.65;
     max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
   }
   .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
@@ -23,12 +24,15 @@
     border-radius:999px; background:#fff}
   .lnav a:hover{background:var(--chip)}
   .lnav .spacer{flex:1}
-  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:1.6rem}
   .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
     letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
   h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
   .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
     background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  .howto{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:#fff; border:1px dashed #c5d2e6; border-radius:8px; padding:.7rem .95rem; margin:1.1rem 0 0}
+  .howto b{color:var(--term)}
   h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
      color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
   h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
@@ -40,6 +44,18 @@
   .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
     padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
   .callout b{color:#8a6d1a}
+  .plain{background:var(--plainbg); border:1px solid var(--plainrule); border-radius:8px;
+    padding:.7rem .95rem; margin:1rem 0; font-size:.93rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .plain .lab{display:inline-block; font-weight:700; color:var(--accent); text-transform:uppercase;
+    letter-spacing:.08em; font-size:.68rem; margin-right:.4rem}
+  .story{border-left:3px solid var(--accent); background:#fff; padding:.4rem 1.1rem; margin:1.1rem 0;
+    border-radius:0 6px 6px 0}
+  .decoder{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0}
+  .decoder h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .7rem; color:var(--term)}
+  .decoder dl{margin:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  .decoder dt{font-weight:700; color:var(--term); margin-top:.7rem}
+  .decoder dt:first-child{margin-top:0}
+  .decoder dd{margin:.15rem 0 0; color:var(--muted)}
   a{color:var(--accent)}
   .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
   /* two-column compare table */
@@ -66,7 +82,8 @@
   .out b{color:var(--term)}
   /* quiz */
   .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
-  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.4rem}
+  .q .hint{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.82rem; color:var(--muted); margin-bottom:.7rem}
   .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
     padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
   .q label:hover{background:var(--chip)}
@@ -98,40 +115,48 @@
 <header>
   <div class="kicker">Lesson 02 · Sensitivity Analysis for Causal Inference</div>
   <h1>Two Postures: Worst-Case Bounds vs Parametric Sensitivity</h1>
-  <div class="mission">Mission tie-in: to "name the families and say when each applies," you first need the top-level split. Every method you'll meet — including the E-value from L01 — sits on one spectrum. Place a method on it and you already half-understand it.</div>
+  <div class="mission">Where this is heading: there are many named sensitivity methods, but they split into just <em>two</em> big families. Once you can tell which family a method belongs to, you already half-understand what its number means — including the E-value from L01.</div>
+  <div class="howto"><b>How to read this lesson.</b> No formulas this time — it is all about a mental map. Each technical term is unpacked in a blue box the first time it shows up. There is one interactive slider that lets you <em>see</em> the trade-off the whole lesson is about.</div>
 </header>
 
-<h2><span class="n">1</span>One assumption, two ways to react to losing it</h2>
-<p>L01 fixed the core move: stop asking "is there unmeasured confounding?" and start asking "how much would it take to overturn the result?" There are exactly two honest ways to answer once you admit conditional ignorability might fail.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">[2]</a></p>
+<h2><span class="n">1</span>The same problem, two honest reactions</h2>
+<p>Recall the core move from L01: stop asking "is there a hidden confounder?" and start asking "how much would it take to overturn the result?" Once you accept that the no-hidden-confounder assumption <em>might</em> be false, there are exactly two honest ways to proceed.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">[2]</a></p>
+<div class="story">
+  <p><strong>An everyday analogy.</strong> Someone asks how long your commute will take. You can answer two ways. <em>Way A:</em> "Anywhere from 20 minutes to 2 hours" — guaranteed to contain the truth, but so wide it barely helps. <em>Way B:</em> "About 35 minutes, assuming no accident on the bridge" — precise and useful, but only as good as that assumption. Sensitivity analysis has these same two postures.</p>
+</div>
 <div class="compare">
   <div class="card">
-    <span class="tag">Posture A — drop the assumption</span>
+    <span class="tag">Posture A — assume nothing</span>
     <h3>Worst-case bounds</h3>
-    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Assume <em>nothing</em> about selection. Ask: what is the full range of effects still consistent with the data?</p>
+    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Make <em>no</em> assumption about who got treated. Ask: what is the full range of effects still consistent with the data?</p>
     <ul>
-      <li>Output is an <strong>interval</strong>, not a number.</li>
+      <li>Output is a <strong>range</strong>, not a single number.</li>
       <li>Honest and assumption-free.</li>
-      <li>Usually <strong>wide</strong> — often spans the null, so "uninformative."</li>
-      <li>Canonical: Manski's nonparametric bounds.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a></li>
+      <li>Usually <strong>wide</strong> — often includes "no effect," so it feels uninformative.</li>
+      <li>Classic version: Manski's nonparametric bounds.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a></li>
     </ul>
   </div>
   <div class="card">
-    <span class="tag">Posture B — calibrate the violation</span>
+    <span class="tag">Posture B — assume a little, then dial</span>
     <h3>Parametric / "how-much" SA</h3>
-    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Keep a model of the bias, dial a confounder's strength, and read off where the estimate moves.</p>
+    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Keep a simple model of how bias works, turn a dial for the confounder's strength, and watch where the estimate moves.</p>
     <ul>
-      <li>Output is a <strong>threshold</strong> ("strength needed to tip").</li>
-      <li>Crisp and actionable.</li>
-      <li>Requires <strong>judgement</strong>: is that strength plausible?</li>
-      <li>Canonical: E-value, robustness value, Rosenbaum Γ.</li>
+      <li>Output is a <strong>threshold</strong> ("the strength that would tip it").</li>
+      <li>Crisp and decision-friendly.</li>
+      <li>Needs <strong>judgement</strong>: is a confounder that strong plausible?</li>
+      <li>Classic versions: E-value, robustness value, Rosenbaum Γ.</li>
     </ul>
   </div>
 </div>
-<div class="callout"><b>The spectrum.</b> Picture a dial. Far left: <em>no assumptions</em> — wide, bullet-proof, often useless. Far right: <em>strong parametric assumptions</em> — narrow, precise, only as trustworthy as the assumptions. Every method is a choice of where to stand. A good paper states where, and why.</div>
+<div class="plain"><span class="lab">In plain words</span> <strong>Worst-case bounds</strong> (also called <em>partial identification</em>) means: rather than commit to one number, you report the whole interval of effects the data cannot rule out. <strong>Parametric / calibration</strong> SA means: you commit to a small model of the bias and report a single tipping-point number. "Parametric" just signals "we assumed a specific functional form for the bias."</div>
+<div class="callout"><b>The spectrum.</b> Picture a dial running left to right. Far left: <em>no assumptions</em> — wide, bullet-proof, often too vague to act on. Far right: <em>strong assumptions</em> — narrow, precise, only as trustworthy as those assumptions. Every method is a choice of where to stand on this dial. A good paper says where it stood, and why.</div>
 
-<h2><span class="n">2</span>Worst-case bounds, concretely</h2>
-<p>Manski's insight: even with <em>zero</em> assumptions about who got treated, the data plus the logical range of the outcome pin the average effect to an interval.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a> You observe outcomes only under the treatment each unit actually received; the counterfactual arm is filled in with its most extreme admissible values to get the upper and lower edge.</p>
-<p>These bounds are <em>sharp</em> — you cannot narrow them without adding an assumption — but for a binary or bounded outcome they are typically wide enough to straddle zero. That is not a failure; it is the honest statement of how little the data alone can say. You then <strong>buy</strong> a narrower interval with assumptions: monotone treatment response, monotone selection, or an instrument.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">[2]</a></p>
+<h2><span class="n">2</span>Worst-case bounds, made concrete</h2>
+<p>Manski's insight: even with <em>zero</em> assumptions about who got treated, the data still pin the average effect to a range.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a> Why? You only ever observe each patient under the <em>one</em> treatment they actually received. For the treatment they did <em>not</em> receive, you fill in the missing outcome with its most extreme possible values — best case for the top of the range, worst case for the bottom. That gives an upper and lower edge.</p>
+<div class="plain"><span class="lab">In plain words</span> <strong>ATE</strong> = "average treatment effect," the average difference in outcome if everyone were treated vs. if no one were. The bounds are a range for this ATE. They are called <strong>sharp</strong> when you cannot make them any narrower without adding an assumption — they already squeeze the data for everything it is worth.</div>
+<p>For a yes/no or otherwise bounded outcome, these honest bounds are usually wide enough to include "no effect." That is not the method failing — it is the method telling you the truth about how little the data <em>alone</em> can say. To get a narrower range, you have to <strong>buy</strong> it with an assumption. The slider below shows three common purchases.</p>
+<div class="plain"><span class="lab">Decoding the slider's assumptions</span>
+  <strong>Monotone treatment response</strong> = "the treatment never <em>hurts</em> anyone" (it can help or do nothing, but not harm). <strong>Monotone selection</strong> = "sicker patients were the more likely ones to get treated." <strong>Instrument</strong> = a variable that nudges treatment but has no direct path to the outcome (its "exclusion restriction"), which sharply tightens the range. Each one is plausible in some settings and indefensible in others — that is the whole point.</div>
 
 <div class="tool">
   <h3>Try it — how assumptions narrow the bounds</h3>
@@ -151,15 +176,16 @@
   <div class="out" id="out"></div>
 </div>
 
-<h2><span class="n">3</span>Where the E-value (and the rest) sit</h2>
-<p>The E-value is firmly Posture B. It does not bound the effect; it reports the confounder strength that would erase it — a calibrated tipping point.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[3]</a> The whole right half of the spectrum shares that shape; they differ in <em>what</em> they dial and on which scale:</p>
+<h2><span class="n">3</span>Where the E-value (and all the rest) sit</h2>
+<p>The E-value from L01 is squarely Posture B. It does not give a range; it reports the confounder strength that would erase the result — a single calibrated tipping point.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[3]</a> The entire right half of the spectrum has this same shape. The methods differ only in <em>what</em> they dial and on which scale:</p>
+<div class="plain"><span class="lab">In plain words</span> Posture B splits again into two sub-kinds. <strong>Analysis-based</strong> methods work on the estimate you already computed (any regression or ML model). <strong>Design-based</strong> methods exploit a special feature of the study design (such as matched pairs, or a control variable). Same posture, different machinery.</div>
 <div class="compare">
   <div class="card">
     <span class="tag">Analysis-based (calibrate a model)</span>
     <h3>E-value · Robustness value</h3>
     <ul>
-      <li>E-value dials a risk-ratio association on both legs (L01).</li>
-      <li>Robustness value dials partial-R² on both legs (L04).</li>
+      <li>E-value dials a risk-ratio strength on both legs (L01).</li>
+      <li>Robustness value dials a "share of variation explained" on both legs (L04).</li>
       <li>Both work on any adjusted estimate, including ML.</li>
     </ul>
   </div>
@@ -167,19 +193,33 @@
     <span class="tag">Design-based (exploit the design)</span>
     <h3>Rosenbaum Γ · Negative controls</h3>
     <ul>
-      <li>Γ dials departure from random assignment in matched sets (L03).</li>
+      <li>Γ dials how far assignment departs from random in matched sets (L03).</li>
       <li>Negative controls detect a confounding footprint (L05).</li>
       <li>Need a specific design (matching; a valid control variable).</li>
     </ul>
   </div>
 </div>
-<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Reading reflex.</b> When you meet any sensitivity analysis, ask two questions in order: <strong>(1)</strong> Is it a <em>bound</em> (interval, no assumptions) or a <em>calibration</em> (threshold, assumed bias model)? <strong>(2)</strong> If calibration, is it <em>analysis-based</em> (E-value, RV) or <em>design-based</em> (Γ, negative control)? Those two answers locate the method and tell you what its number means.</div>
+<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Reading reflex.</b> When you meet any sensitivity analysis, ask two questions in order: <strong>(1)</strong> Is it a <em>bound</em> (a range, no assumptions) or a <em>calibration</em> (a threshold, with an assumed bias model)? <strong>(2)</strong> If it is a calibration, is it <em>analysis-based</em> (E-value, robustness value) or <em>design-based</em> (Γ, negative control)? Those two answers locate the method on the map and tell you what its number means.</div>
+
+<div class="decoder">
+  <h3>Quick decoder — every term from this lesson</h3>
+  <dl>
+    <dt>ATE (average treatment effect)</dt><dd>The average outcome difference between "everyone treated" and "no one treated." The quantity most sensitivity analyses are about.</dd>
+    <dt>Worst-case bounds / partial identification</dt><dd>Posture A: report the whole range of effects the data can't rule out, assuming nothing about treatment selection. Honest but often wide.</dd>
+    <dt>Sharp bounds</dt><dd>Bounds you cannot narrow further without adding an assumption — already as tight as the raw data allow.</dd>
+    <dt>Parametric / calibration SA</dt><dd>Posture B: assume a simple bias model, then report a single tipping-point number (e.g. the E-value).</dd>
+    <dt>Analysis-based vs design-based</dt><dd>Two flavours of Posture B: works on the fitted estimate (analysis-based) vs. exploits a study-design feature like matching (design-based).</dd>
+    <dt>Monotone treatment response / selection</dt><dd>Sample tightening assumptions: "treatment never harms" / "sicker patients were likelier to be treated."</dd>
+    <dt>Instrument</dt><dd>A variable that shifts treatment but has no direct effect on the outcome; if valid, it sharply narrows the bounds.</dd>
+  </dl>
+</div>
 
 <h2><span class="n">4</span>Check yourself</h2>
-<p>Classify each scenario by posture. Feedback is immediate.</p>
+<p>Classify each scenario by posture. Feedback appears instantly.</p>
 
 <div class="q" id="q1" data-correct="a">
   <div class="stem">A paper reports: "Under no assumptions about treatment selection, the ATE lies in [−0.04, 0.21]." Which posture?</div>
+  <div class="hint">Hint: two tells — "no assumptions" and a <em>range</em> as the output.</div>
   <label><input type="radio" name="q1" value="a"> Worst-case bounds (Posture A).</label>
   <label><input type="radio" name="q1" value="b"> Parametric calibration (Posture B).</label>
   <label><input type="radio" name="q1" value="c"> Neither — it's just a confidence interval.</label>
@@ -187,7 +227,8 @@
 </div>
 
 <div class="q" id="q2" data-correct="b">
-  <div class="stem">"A confounder would need risk-ratio associations of 3.4 with both exposure and outcome to nullify the effect." Posture, and which sub-family?</div>
+  <div class="stem">"A confounder would need risk-ratio associations of 3.4 with both exposure and outcome to nullify the effect." Which posture, and which sub-family?</div>
+  <div class="hint">Hint: a single tipping-point on the risk-ratio scale — you met this exact statistic in L01.</div>
   <label><input type="radio" name="q2" value="a"> Posture A, design-based.</label>
   <label><input type="radio" name="q2" value="b"> Posture B, analysis-based calibration (this is an E-value).</label>
   <label><input type="radio" name="q2" value="c"> Posture B, design-based (this is a Rosenbaum Γ).</label>
@@ -196,6 +237,7 @@
 
 <div class="q" id="q3" data-correct="c">
   <div class="stem">A reviewer dismisses a Manski-bounds analysis: "The interval is so wide it includes zero — useless." Best response?</div>
+  <div class="hint">Hint: is width a bug, or the honest price of assuming nothing?</div>
   <label><input type="radio" name="q3" value="a"> Agree; wide bounds mean the study failed.</label>
   <label><input type="radio" name="q3" value="b"> The bounds must be miscomputed; correct bounds are always informative.</label>
   <label><input type="radio" name="q3" value="c"> Width is the honest cost of making no assumptions; report it, then state which assumptions would narrow it and whether they're defensible.</label>
@@ -204,6 +246,7 @@
 
 <div class="q" id="q4" data-correct="b">
   <div class="stem">Which statement about the spectrum is correct?</div>
+  <div class="hint">Hint: what do you spend to move rightward and gain precision?</div>
   <label><input type="radio" name="q4" value="a"> Narrower (more parametric) is always better — precision wins.</label>
   <label><input type="radio" name="q4" value="b"> Moving right buys precision by spending assumptions; the result is only as trustworthy as those assumptions.</label>
   <label><input type="radio" name="q4" value="c"> Bounds and parametric SA answer the same question, so the choice is cosmetic.</label>
@@ -213,9 +256,9 @@
 <div class="score" id="score"></div>
 
 <div class="next">
-  <strong>Your win:</strong> you can place any sensitivity analysis on the spectrum — bound vs calibration, and within calibration, analysis- vs design-based — which tells you what its number means before you read a single formula.<br><br>
-  <strong>Ask your teacher (me) anything:</strong> want to see real Manski bounds computed on a clinical dataset, or work through when monotone-selection is defensible? Just ask.<br><br>
-  <strong>Next lesson (L03):</strong> Rosenbaum Γ-bounds — the design-based calibration for matched studies, and the famous reason smoking→lung-cancer survives it.
+  <strong>Your win:</strong> you can place any sensitivity analysis on the map — bound vs. calibration, and within calibration, analysis- vs. design-based — which tells you what its number means before you read a single formula.<br><br>
+  <strong>Ask me anything — I'm your tutor.</strong> Want to see real Manski bounds computed on a clinical dataset, or talk through when "monotone selection" is actually defensible? Just ask.<br><br>
+  <strong>Next (L03):</strong> Rosenbaum Γ-bounds — the design-based calibration for matched studies, and the famous reason the smoking–lung-cancer link survives it.
 </div>
 
 <footer>
@@ -233,13 +276,13 @@
   // axis maps effect in [-1,1] to 0..100%; null (0) sits at 50%.
   var levels = [
     {lab:'none (worst-case)', lo:-0.55, hi:0.85,
-     say:'Pure Manski bounds. No assumption about who was treated. The interval straddles <b>no effect</b>, so the data alone cannot sign the effect &mdash; honest, not broken.'},
+     say:'Pure Manski bounds. No assumption about who was treated. The range straddles <b>no effect</b>, so the data alone cannot even tell you the <em>direction</em> of the effect &mdash; honest, not broken.'},
     {lab:'+ monotone treatment response', lo:-0.10, hi:0.78,
-     say:'Assume treatment never <em>hurts</em> anyone. The lower edge lifts toward zero; still crosses, but tighter.'},
+     say:'Assume the treatment never <em>hurts</em> anyone. The lower edge lifts toward zero; still crosses it, but tighter.'},
     {lab:'+ monotone selection', lo:0.06, hi:0.70,
-     say:'Also assume sicker patients were more likely treated. Now the interval clears <b>no effect</b> &mdash; a signed conclusion, bought with two assumptions you must defend.'},
+     say:'Also assume sicker patients were more likely to be treated. Now the range clears <b>no effect</b> &mdash; a signed conclusion, bought with two assumptions you must defend.'},
     {lab:'+ instrument', lo:0.30, hi:0.58,
-     say:'Add a valid instrument. Tight, decision-grade interval &mdash; but it now rests on the IV exclusion restriction. Maximum precision, maximum assumption load.'}
+     say:'Add a valid instrument. Tight, decision-grade range &mdash; but it now rests on the instrument being truly unrelated to the outcome except through treatment. Maximum precision, maximum assumption load.'}
   ];
   function pctOf(x){ return (x + 1) / 2 * 100; }
   function refresh(){
@@ -250,16 +293,16 @@
     pt.style.left = pctOf(0.42) + '%'; // the unknown "truth"
     var crosses = L.lo < 0 && L.hi > 0;
     out.innerHTML = L.say + '<br><b>Reads as:</b> ' + (crosses
-      ? 'effect <b>not signed</b> (interval includes no-effect).'
-      : 'effect <b>signed</b> (interval excludes no-effect) &mdash; conclusion is identified <em>given the assumptions</em>.');
+      ? 'effect <b>direction unknown</b> (range includes no-effect).'
+      : 'effect <b>direction known</b> (range excludes no-effect) &mdash; a conclusion you can sign, <em>given the assumptions</em>.');
   }
   asm.addEventListener('input', refresh); refresh();
 
   // Quiz engine
   var explain = {
-    q1:{ ok:'Correct. "No assumptions about selection" + an interval output = Manski-style worst-case bounds, Posture A. Note it includes 0, which is the honest cost.',
-         no:'Look for the tells: <em>no assumptions</em> + an <em>interval</em> (not a single estimate with sampling error). That is worst-case bounds, answer (a).' },
-    q2:{ ok:'Correct. A risk-ratio strength needed to nullify, on both legs, is the E-value definition (L01): Posture B, analysis-based calibration.',
+    q1:{ ok:'Correct. "No assumptions about selection" + a range as the output = Manski-style worst-case bounds, Posture A. Note it includes 0, which is the honest cost.',
+         no:'Look for the two tells: <em>no assumptions</em> + a <em>range</em> (not a single estimate with sampling error). That is worst-case bounds, answer (a).' },
+    q2:{ ok:'Correct. A risk-ratio strength needed to nullify, on both legs, is the E-value definition from L01: Posture B, analysis-based calibration.',
          no:'A confounder strength that would tip the result is a calibration (Posture B). "Risk-ratio on both legs" is specifically the E-value &mdash; analysis-based. Answer (b).' },
     q3:{ ok:'Correct. Width is the price of zero assumptions, not an error. The right move is to report it and then say which assumptions would tighten it and whether they hold.',
          no:'Wide bounds are not a bug &mdash; they are the honest statement of what the data alone support. The professional response is (c): report, then name the assumptions that would narrow them.' },
@@ -274,8 +317,7 @@
     var fb = document.getElementById('fb'+qid.slice(1));
     var isOk = sel.value === correct; answered[qid] = isOk;
     fb.className = 'fb show ' + (isOk ? 'ok' : 'no');
-    fb.textContent = isOk ? explain[qid].ok : explain[qid].no;
-    if(isOk){ fb.innerHTML = explain[qid].ok; } else { fb.innerHTML = explain[qid].no; }
+    fb.innerHTML = isOk ? explain[qid].ok : explain[qid].no;
     var keys = Object.keys(answered);
     if(keys.length === 4){
       var right = keys.filter(function(k){return answered[k];}).length;

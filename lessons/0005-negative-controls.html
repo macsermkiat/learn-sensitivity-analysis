@@ -10,11 +10,12 @@
     --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
     --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
     --warnbg:#fff7e6; --warnrule:#e7c66a;
+    --plainbg:#eef4fb; --plainrule:#bcd2ee;
   }
   *{box-sizing:border-box}
   body{
     font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
+    color:var(--ink); background:var(--bg); line-height:1.65;
     max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
   }
   .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
@@ -23,12 +24,15 @@
     border-radius:999px; background:#fff}
   .lnav a:hover{background:var(--chip)}
   .lnav .spacer{flex:1}
-  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:1.6rem}
   .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
     letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
   h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
   .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
     background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  .howto{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:#fff; border:1px dashed #c5d2e6; border-radius:8px; padding:.7rem .95rem; margin:1.1rem 0 0}
+  .howto b{color:var(--term)}
   h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
      color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
   h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
@@ -40,6 +44,18 @@
   .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
     padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
   .callout b{color:#8a6d1a}
+  .plain{background:var(--plainbg); border:1px solid var(--plainrule); border-radius:8px;
+    padding:.7rem .95rem; margin:1rem 0; font-size:.93rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .plain .lab{display:inline-block; font-weight:700; color:var(--accent); text-transform:uppercase;
+    letter-spacing:.08em; font-size:.68rem; margin-right:.4rem}
+  .story{border-left:3px solid var(--accent); background:#fff; padding:.4rem 1.1rem; margin:1.1rem 0;
+    border-radius:0 6px 6px 0}
+  .decoder{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0}
+  .decoder h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .7rem; color:var(--term)}
+  .decoder dl{margin:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  .decoder dt{font-weight:700; color:var(--term); margin-top:.7rem}
+  .decoder dt:first-child{margin-top:0}
+  .decoder dd{margin:.15rem 0 0; color:var(--muted)}
   a{color:var(--accent)}
   .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:.9rem; margin:1.3rem 0}
@@ -63,7 +79,8 @@
   .toolfb.no{background:var(--badbg); border:1px solid #e3b3b3; color:var(--bad)}
   .prog{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.8rem; color:var(--muted); margin-top:.6rem}
   .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
-  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.4rem}
+  .q .hint{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.82rem; color:var(--muted); margin-bottom:.7rem}
   .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
     padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
   .q label:hover{background:var(--chip)}
@@ -92,37 +109,43 @@
 <header>
   <div class="kicker">Lesson 05 · Sensitivity Analysis for Causal Inference</div>
   <h1>Negative Controls: the Design-Based Detector</h1>
-  <div class="mission">Mission tie-in: the last family on your map. Negative controls answer a different question from every calibration method — "is there a <em>detectable footprint</em> of confounding?" — and clinical RWD papers lean on them heavily. Knowing their limits is the fluency test.</div>
+  <div class="mission">Where this is heading: the last family on your map. Negative controls answer a <em>different</em> question from every calibration method — "is there a <em>detectable footprint</em> of confounding at all?" Clinical RWD papers lean on them heavily, and knowing their limits is the fluency test.</div>
+  <div class="howto"><b>How to read this lesson.</b> No formulas — it is about a clever study-design trick and its two failure modes. Each term gets a plain-words box. The interactive widget at the end lets you practise spotting valid vs. broken controls.</div>
 </header>
 
 <h2><span class="n">1</span>The idea, borrowed from the lab bench</h2>
-<p>In a wet lab you run a control you <em>know</em> should show nothing. If it lights up, your assay is contaminated. Lipsitch, Tchetgen Tchetgen &amp; Cohen imported this into epidemiology: pick something that <em>cannot</em> be causally affected here but is dragged by the same confounding — then look for an effect that shouldn't exist.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
-<div class="callout"><b>The logic.</b> If a relationship that <em>must</em> be null comes back non-null, the most likely culprit is the bias your design failed to remove — residual confounding, selection, or measurement error. The negative control is a tripwire for "your pipeline is biased."</div>
+<div class="story">
+  <p>In a wet lab, you run a control you <em>know</em> should come back blank — a test tube with no target in it. If it lights up anyway, you don't celebrate; you conclude your assay is contaminated. The blank is a tripwire for "something is leaking into my measurements."</p>
+</div>
+<p>Lipsitch, Tchetgen Tchetgen &amp; Cohen imported exactly that move into epidemiology.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a> Pick something that <em>cannot</em> be causally affected in your study, but that gets dragged around by the <em>same</em> confounding as your real question — then check whether an effect shows up where none should exist.</p>
+<div class="plain"><span class="lab">In plain words</span> A <strong>negative control</strong> is a deliberately "should-be-null" relationship you run alongside your real analysis. If it comes back non-null, the most likely explanation is the bias your design failed to remove — residual confounding, selection, or measurement error. It is a contamination check for your causal pipeline.</div>
+<div class="callout"><b>The logic in one line.</b> A relationship that <em>must</em> be zero, but isn't, is your study confessing that bias is leaking in.</div>
 
-<h2><span class="n">2</span>Two flavours</h2>
+<h2><span class="n">2</span>Two flavours: swap the outcome, or swap the exposure</h2>
 <div class="grid2">
   <div class="card">
     <span class="tag">Swap the outcome</span>
     <h3>Negative-control outcome (NCO)</h3>
-    <p>An outcome the exposure cannot plausibly cause, but driven by the same confounders.</p>
-    <p style="color:var(--muted)">Clinical example: testing whether a drug "causes" an outcome it has no mechanism for, in the same cohort. A non-null hit ⇒ confounding.</p>
+    <p>An outcome the treatment cannot plausibly cause, but that is driven by the same confounders.</p>
+    <p style="color:var(--muted)">Clinical example: checking whether a drug "causes" some outcome it has no mechanism for, in the same cohort. A non-null hit ⇒ confounding is present.</p>
   </div>
   <div class="card">
     <span class="tag">Swap the exposure</span>
     <h3>Negative-control exposure (NCE)</h3>
-    <p>An exposure that cannot cause the real outcome, but shares the confounding structure.</p>
-    <p style="color:var(--muted)">Example: a "treatment" given <em>after</em> the outcome window, or an unrelated prescription with the same prescribing biases.</p>
+    <p>An exposure that cannot cause the real outcome, but shares the same confounding structure.</p>
+    <p style="color:var(--muted)">Example: a "treatment" given <em>after</em> the outcome window, or an unrelated prescription that carries the same prescribing biases.</p>
   </div>
 </div>
-<p>A widely used special case is the <em>pre-exposure</em> NCO: an outcome measured before treatment could act. Any "effect" there is impossible by time-order, so it isolates baseline imbalance.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
+<div class="plain"><span class="lab">In plain words</span> Same trick, two directions. An <strong>NCO</strong> keeps your real treatment but swaps in a fake outcome. An <strong>NCE</strong> keeps your real outcome but swaps in a fake exposure. Either way, the swapped-in thing is chosen so the true effect is known to be zero.</div>
+<p>A popular special case is the <em>pre-exposure</em> NCO: an outcome measured <strong>before</strong> the treatment could have acted. Any "effect" there is impossible by time-order alone, so it cleanly isolates baseline imbalance between the groups.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
 
 <h2><span class="n">3</span>The two assumptions that make or break it</h2>
-<p>A negative control is only as good as two conditions, and most critiques live here:<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
+<p>A negative control is only as trustworthy as two conditions — and almost every valid critique of one lives in these two boxes:<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
 <div class="grid2">
   <div class="card">
     <span class="tag">Assumption 1</span>
     <h3>The null really holds</h3>
-    <p>The control must have <em>no</em> true causal effect. If the drug actually does nudge your "negative" outcome a little, a non-null hit is real, not bias — false alarm.</p>
+    <p>The control must have <em>no</em> true causal effect. If the treatment actually does nudge your "negative" outcome a little, a non-null hit is a real effect, not bias — a false alarm.</p>
   </div>
   <div class="card">
     <span class="tag">Assumption 2</span>
@@ -130,20 +153,36 @@
     <p>The control must share the <em>same</em> confounders as the real analysis. If it's confounded by different things, a clean control falsely reassures you.</p>
   </div>
 </div>
+<div class="plain"><span class="lab">In plain words</span> <strong>U-comparability</strong> just means "same hidden confounders (U) as the real question." The two failure modes are mirror images: <em>Assumption 1 fails</em> → the control wasn't really null, so a hit means nothing. <em>Assumption 2 fails</em> → the control is pushed by different confounders, so a clean result proves nothing about your real analysis.</div>
 
 <h2><span class="n">4</span>Detector, not quantifier — where it sits on your map</h2>
-<p>This is the fluency point. A negative control can reveal that confounding is <em>present</em> (and often its direction), but on its own it does <strong>not</strong> tell you how big the bias on your real estimate is.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a> Contrast the whole map:</p>
+<p>Here is the fluency point, and the one to remember. A negative control can reveal that confounding is <em>present</em> (and often hint at its direction), but on its own it does <strong>not</strong> tell you how big the bias on your real estimate is.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/" target="_blank">[1]</a></p>
+<div class="plain"><span class="lab">The key distinction</span> <strong>Detect</strong> ≠ <strong>quantify.</strong> A smoke alarm detects fire; it does not tell you how much of the house is burning. Negative controls are the smoke alarm. The E-value, robustness value, and Γ are the methods that estimate the size of the problem.</div>
 <div class="callout" style="background:var(--chip);border-color:#c5d2e6">
-  <b style="color:var(--term)">The families, one line each:</b><br>
+  <b style="color:var(--term)">The five families, one line each:</b><br>
   • <b>Worst-case bounds</b> (L02): the honest range with no assumptions.<br>
   • <b>E-value</b> (L01) &amp; <b>robustness value</b> (L04): <em>how strong</em> would confounding need to be? (analysis-based calibration)<br>
   • <b>Rosenbaum Γ</b> (L03): the same question for matched designs (design-based calibration).<br>
   • <b>Negative controls</b> (L05): <em>is there a detectable footprint</em> of confounding at all? (design-based detector)<br>
   Calibration methods quantify; negative controls detect. A strong analysis often reports <em>both</em>.
 </div>
-<p>Depth pointer: methods like control-outcome calibration and proximal causal inference push negative controls past detection into actually <em>correcting</em> the bias — worth knowing the terms exist when you see them.<a class="cite" href="https://academic.oup.com/aje/article/179/5/633/144124" target="_blank">[2]</a></p>
+<p>Depth pointer for later: methods called <em>control-outcome calibration</em> and <em>proximal causal inference</em> push negative controls past mere detection into actually <strong>correcting</strong> the bias — worth recognising the terms when you meet them.<a class="cite" href="https://academic.oup.com/aje/article/179/5/633/144124" target="_blank">[2]</a></p>
+
+<div class="decoder">
+  <h3>Quick decoder — every term from this lesson</h3>
+  <dl>
+    <dt>Negative control</dt><dd>A deliberately should-be-null relationship run alongside the real analysis; a non-null result signals leftover bias.</dd>
+    <dt>NCO (negative-control outcome)</dt><dd>Keep the real treatment, swap in an outcome it cannot cause but that shares the confounding.</dd>
+    <dt>NCE (negative-control exposure)</dt><dd>Keep the real outcome, swap in an exposure that cannot cause it but shares the confounding.</dd>
+    <dt>Pre-exposure NCO</dt><dd>An outcome measured before treatment could act; any "effect" is impossible by time-order, so it isolates baseline imbalance.</dd>
+    <dt>Null holds (Assumption 1)</dt><dd>The control truly has no causal effect. If false, a hit is a real effect, not bias.</dd>
+    <dt>U-comparability (Assumption 2)</dt><dd>The control shares the same hidden confounders as the real analysis. If false, a clean result is meaningless.</dd>
+    <dt>Detector vs. quantifier</dt><dd>Negative controls detect a footprint of bias; calibration methods (E-value, RV, Γ) estimate its size.</dd>
+  </dl>
+</div>
 
 <h2><span class="n">5</span>Practice — is this a valid negative control?</h2>
+<p>Read each candidate and decide. If it's broken, say <em>which</em> assumption fails. Feedback is immediate.</p>
 <div class="tool" id="scnTool">
   <h3>Judge each candidate</h3>
   <div class="scn" id="scnText"></div>
@@ -160,6 +199,7 @@
 
 <div class="q" id="q1" data-correct="b">
   <div class="stem">A vaccine study uses "broken arm in the 30 days post-vaccination" as a negative-control outcome and finds a non-null association with vaccination. Most likely meaning?</div>
+  <div class="hint">Hint: a vaccine can't cause a broken arm — so what does a hit reveal about the study?</div>
   <label><input type="radio" name="q1" value="a"> The vaccine causes broken arms.</label>
   <label><input type="radio" name="q1" value="b"> Residual confounding/selection (e.g., healthier or more health-seeking people get vaccinated) is contaminating the estimates.</label>
   <label><input type="radio" name="q1" value="c"> Nothing — negative controls can't reveal bias.</label>
@@ -168,6 +208,7 @@
 
 <div class="q" id="q2" data-correct="c">
   <div class="stem">A clean (null) negative-control result is reported as "proof the main effect is unconfounded." Best critique?</div>
+  <div class="hint">Hint: detect ≠ quantify, and "no footprint found" relies on U-comparability.</div>
   <label><input type="radio" name="q2" value="a"> Correct — a null control proves no confounding.</label>
   <label><input type="radio" name="q2" value="b"> Wrong because negative controls measure the outcome incorrectly.</label>
   <label><input type="radio" name="q2" value="c"> Overstated — a null control only fails to detect bias under U-comparability; absence of a footprint is not proof of no confounding.</label>
@@ -176,6 +217,7 @@
 
 <div class="q" id="q3" data-correct="a">
   <div class="stem">Which best describes a negative control's role versus an E-value?</div>
+  <div class="hint">Hint: smoke alarm vs. damage estimate.</div>
   <label><input type="radio" name="q3" value="a"> Negative control = detector of confounding's footprint; E-value = quantifier of how much confounding would be needed.</label>
   <label><input type="radio" name="q3" value="b"> They are the same test on different scales.</label>
   <label><input type="radio" name="q3" value="c"> The E-value detects; the negative control quantifies.</label>
@@ -186,8 +228,8 @@
 
 <div class="next">
   <strong>Your win — and the course arc:</strong> you can now name all five families and say when each applies, read the headline statistic of each (E-value, bounds, Γ, robustness value/contour, negative-control hit), and spot the signature misuses. That is the fluency the mission asked for.<br><br>
-  <strong>Ask your teacher (me) anything:</strong> bring a real paper's sensitivity section and we'll critique it end to end, or go deeper on proximal causal inference. This is where wisdom (real critique) begins.<br><br>
-  <strong>Where next:</strong> consider testing your reading on Cross Validated (stats.stackexchange.com) or a methods journal club — applying these to live papers is how fluency hardens into judgement.
+  <strong>Ask me anything — I'm your tutor.</strong> Bring a real paper's sensitivity section and we'll critique it together, end to end — that is where wisdom (real critique) begins.<br><br>
+  <strong>Where next:</strong> test your reading on a live paper, on Cross Validated (stats.stackexchange.com), or in a methods journal club. Applying these to real papers is how fluency hardens into judgement.
 </div>
 
 <footer>

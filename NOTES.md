@@ -1,11 +1,24 @@
 # Notes
 
 ## Learner profile
-- Statistically sophisticated: clinical research, builds ML, works with causal models.
-  Skip remedial stats. Lead with the causal-inference framing.
 - Domain context: clinical real-world data (RWD). Examples should be clinical where possible
   (drug–outcome associations, transfusion/observational cohorts) — lands harder than abstract.
 - Goal is **fluency** (read/critique/reason), not building estimators from scratch.
+
+## PITCH CORRECTION (2026-06-10) — IMPORTANT
+- User reported they "can't understand the lessons well" and asked to make them EASIER with
+  MORE explanation. The original L01–L05 were built for a "statistically sophisticated, skip
+  remedial stats" reader — that pitch was TOO HIGH in practice.
+- New house style (applied to L01 first as the template; roll out to L02–L05 after user confirms):
+  - Lead with a concrete clinical STORY, not the abstract assumption.
+  - Unpack EVERY jargon term in plain words the first time it appears (blue `.plain` boxes:
+    "In plain words ...").
+  - Walk formulas through step by step (`.steps` block), plugging in real numbers.
+  - Add a "Quick decoder" definition box at the end recapping every term.
+  - Add a one-line hint under each quiz question.
+  - Use analogies (e.g. E-value = "how heavy a truck before the bridge falls").
+  - Do NOT assume causal-inference fluency; build it. Still no remedial *basic* stats lecture,
+    but DO define confounding, ignorability, risk ratio, etc. when first used.
 
 ## Teaching preferences (global, from user CLAUDE.md)
 - No emojis in any output.

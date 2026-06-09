@@ -10,11 +10,12 @@
     --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
     --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
     --warnbg:#fff7e6; --warnrule:#e7c66a;
+    --plainbg:#eef4fb; --plainrule:#bcd2ee;
   }
   *{box-sizing:border-box}
   body{
     font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
+    color:var(--ink); background:var(--bg); line-height:1.65;
     max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
   }
   .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
@@ -23,12 +24,15 @@
     border-radius:999px; background:#fff}
   .lnav a:hover{background:var(--chip)}
   .lnav .spacer{flex:1}
-  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:1.6rem}
   .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
     letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
   h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
   .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
     background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  .howto{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:#fff; border:1px dashed #c5d2e6; border-radius:8px; padding:.7rem .95rem; margin:1.1rem 0 0}
+  .howto b{color:var(--term)}
   h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
      color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
   h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
@@ -43,6 +47,25 @@
   .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
     padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
   .callout b{color:#8a6d1a}
+  /* plain-language aside */
+  .plain{background:var(--plainbg); border:1px solid var(--plainrule); border-radius:8px;
+    padding:.7rem .95rem; margin:1rem 0; font-size:.93rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .plain .lab{display:inline-block; font-weight:700; color:var(--accent); text-transform:uppercase;
+    letter-spacing:.08em; font-size:.68rem; margin-right:.4rem}
+  /* narrative / story block */
+  .story{border-left:3px solid var(--accent); background:#fff; padding:.4rem 1.1rem; margin:1.1rem 0;
+    border-radius:0 6px 6px 0}
+  /* formula walk-through */
+  .steps{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92rem; background:#fff;
+    border:1px solid var(--rule); border-radius:8px; padding:.9rem 1.1rem; margin:1rem 0; line-height:1.9}
+  .steps .c{color:var(--muted)}
+  /* jargon decoder */
+  .decoder{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0}
+  .decoder h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .7rem; color:var(--term)}
+  .decoder dl{margin:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  .decoder dt{font-weight:700; color:var(--term); margin-top:.7rem}
+  .decoder dt:first-child{margin-top:0}
+  .decoder dd{margin:.15rem 0 0; color:var(--muted)}
   a{color:var(--accent)}
   .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
   /* interactive calculator */
@@ -61,7 +84,8 @@
   .chips button:hover{background:#e1e9f4}
   /* quiz */
   .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
-  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.4rem}
+  .q .hint{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.82rem; color:var(--muted); margin-bottom:.7rem}
   .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
     padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
   .q label:hover{background:var(--chip)}
@@ -92,21 +116,42 @@
 <header>
   <div class="kicker">Lesson 01 · Sensitivity Analysis for Causal Inference</div>
   <h1>What a Sensitivity Analysis Actually Asks</h1>
-  <div class="mission">Mission tie-in: by the end you can pick up any clinical RWD paper, read its E-value, and judge whether "robust to unmeasured confounding" is earned or overstated. That single skill covers most sensitivity analyses you'll meet.</div>
+  <div class="mission">Where this is heading: by the end you can pick up a clinical study, find the one number it reports for "robustness to unmeasured confounding" (the <em>E-value</em>), and judge whether the claim is earned or oversold. That one skill covers most sensitivity analyses you will ever meet.</div>
+  <div class="howto"><b>How to read this lesson.</b> It assumes only that you have seen observational studies report an effect (a risk ratio, an odds ratio). Every technical term is unpacked in plain words the first time it appears, in a blue box like the ones below. Go slowly; there is one idea here, repeated from three angles.</div>
 </header>
 
-<h2><span class="n">1</span>The one question behind all of it</h2>
-<p>Every observational causal estimate — a regression coefficient, a matched odds ratio, a doubly-robust ATE — rests on one assumption you can never check: <em>conditional ignorability</em>, i.e. no unmeasured confounding. Given the covariates you measured, treatment is as-good-as-random.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[1]</a></p>
-<p>You cannot test that assumption with your data. So sensitivity analysis flips the question from the unanswerable to the answerable:</p>
-<div class="callout"><b>The reframe.</b> Not "is there unmeasured confounding?" (untestable) but <strong>"how strong would unmeasured confounding have to be to overturn my conclusion?"</strong> If the answer is "implausibly strong," the result stands. If "barely any," it is fragile. That number is the whole game.</div>
-<p>This is the mental model. Every tool in this field — E-values, Rosenbaum Γ-bounds, omitted-variable-bias contour plots, robustness values for causal ML — is a different way of producing and calibrating that "how strong" number. Learn the reframe once and every method becomes a variation on a theme.</p>
+<h2><span class="n">1</span>Start with a worry you already have</h2>
+<p>Picture a normal observational study — the kind you read all the time:</p>
+<div class="story">
+  <p>A cohort study follows patients on drug A and patients not on drug A. It finds the drug-A group has <strong>twice the rate of heart attacks</strong>: a <em>risk ratio of 2.0</em>. The authors conclude drug A raises heart-attack risk.</p>
+</div>
+<p>Before believing "the drug causes heart attacks," you ask the obvious clinician's question: <strong>were the two groups really the same to begin with?</strong> Suppose the sicker patients were the ones who got drug A. Then their higher heart-attack rate might come from <em>being sicker</em>, not from the drug. Baseline sickness is riding along with treatment and pushing the outcome up on its own.</p>
+<div class="plain"><span class="lab">In plain words</span> A <strong>confounder</strong> is a third thing that (a) differs between your treated and untreated groups <em>and</em> (b) affects the outcome on its own. It creates a fake — or inflated — association between treatment and outcome. "Baseline sickness" is the confounder in our story.</div>
+<p>The usual fix: <em>adjust for</em> the confounders you measured — age, prior disease, lab values — with regression, matching, or weighting. After adjustment, the comparison is meant to be apples-to-apples. But here is the catch that never goes away:</p>
+<div class="callout"><b>The thing you can never rule out.</b> What about a confounder you did <em>not</em> measure — or never even thought of? Call it <strong>U</strong>. You have no data on it, so you cannot adjust for it, and you cannot prove it does not exist. Every observational causal claim rests on the hope that no important U is lurking.</div>
+<div class="plain"><span class="lab">In plain words</span> "No important U is lurking" has a formal name: <strong>conditional ignorability</strong> (also called <em>no unmeasured confounding</em>). "Conditional" = after adjusting for what you measured; "ignorability" = you can then treat who-got-treated as essentially random. It is an <em>assumption</em>, never something your data can check.</div>
 
-<h2><span class="n">2</span>The E-value: the number you'll see most</h2>
-<p>In clinical RWD, the dominant instantiation is the <em>E-value</em> <a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[1]</a>. Definition, worth memorising:</p>
-<div class="callout" style="background:var(--chip);border-color:#c5d2e6">The <b style="color:var(--term)">E-value</b> is the minimum strength of association, on the risk-ratio scale, that an unmeasured confounder would need with <em>both</em> the treatment and the outcome — beyond the measured covariates — to fully explain away the observed association.</div>
-<p>One number, computed from the point estimate:</p>
-<div class="formula">for RR ≥ 1 &nbsp;→&nbsp; E = RR + √( RR · (RR − 1) )<br><span style="color:var(--muted);font-size:.85rem">(if RR &lt; 1, use RR* = 1/RR first)</span></div>
-<p>So an observed <code>RR = 2.0</code> gives <code>E = 2 + √(2·1) = 3.41</code>: a confounder would need roughly 3.4-fold associations with <em>both</em> the exposure and the outcome to nullify it. An <code>RR = 1.3</code> gives only <code>E = 1.92</code> — much easier to explain away. Larger E-value, more robust; an E-value of 1 means the result is already null.</p>
+<h2><span class="n">2</span>The reframe that makes the problem solvable</h2>
+<p>You cannot prove U does not exist. So stop trying to. Sensitivity analysis swaps the impossible question for an answerable one:</p>
+<div class="callout"><b>The reframe.</b> Not "is there unmeasured confounding?" (you can never know) but <strong>"how strong would an unmeasured confounder have to be to overturn my conclusion?"</strong> If the honest answer is "implausibly strong," your result stands. If "barely any," it is fragile. <em>That single number is the whole game.</em></div>
+<p>Think of it as a stress test. You are not asking whether the bridge will be hit by a truck; you are asking how heavy a truck it would take to make the bridge fall. A bridge that only fails under an impossibly heavy truck is one you trust.</p>
+<div class="plain"><span class="lab">In plain words</span> <strong>Sensitivity analysis</strong> = a family of methods that all compute some version of "how strong would the hidden confounder have to be to explain my result away." Every tool in this course — E-values, Rosenbaum Γ, contour plots, robustness values for machine-learning estimators — is a different way of producing and calibrating that one "how strong" number. Learn the reframe once and every method is a variation on it.</div>
+
+<h2><span class="n">3</span>The E-value: the "how strong" number you will see most</h2>
+<p>In clinical real-world-data papers, the dominant version of that number is the <em>E-value</em>.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[1]</a> Read this definition slowly, twice:</p>
+<div class="callout" style="background:var(--chip);border-color:#c5d2e6">The <b style="color:var(--term)">E-value</b> is the <strong>smallest strength of association</strong> that an unmeasured confounder U would need to have with <em>both</em> the treatment and the outcome — over and above the variables you already adjusted for — to <strong>fully explain away</strong> the result (drag it all the way back to "no effect").</div>
+<div class="plain"><span class="lab">In plain words</span> "Strength of association" here is just a risk ratio. An E-value of <strong>3.4</strong> means: a hidden confounder would have to make the outcome about <strong>3.4× more likely</strong> <em>and</em> make getting the treatment about <strong>3.4× more likely</strong>, at the same time, before it could account for the whole finding. <strong>Bigger E-value = more confounding required = more robust.</strong> An E-value of 1 means "zero confounding required" — the result was already null.</div>
+<p>It is computed straight from the point estimate. For a risk ratio of 1 or more:</p>
+<div class="formula">E = RR + √( RR · (RR − 1) )<br><span style="color:var(--muted);font-size:.85rem">(if your RR is below 1 — a protective effect — first flip it: use RR* = 1 / RR, then apply the same formula)</span></div>
+<p>Let us actually plug in the heart-attack study's <code>RR = 2.0</code>, one step at a time:</p>
+<div class="steps">
+  E = 2.0 + √( 2.0 × (2.0 − 1) )        <span class="c">&larr; start with RR = 2.0</span><br>
+  E = 2.0 + √( 2.0 × 1.0 )              <span class="c">&larr; 2.0 − 1 = 1.0</span><br>
+  E = 2.0 + √( 2.0 )                    <span class="c">&larr; 2.0 × 1.0 = 2.0</span><br>
+  E = 2.0 + 1.41                        <span class="c">&larr; √2.0 ≈ 1.41</span><br>
+  E = <strong>3.41</strong>                          <span class="c">&larr; the E-value</span>
+</div>
+<p>So to explain away the drug-A finding, a hidden confounder would need roughly <strong>3.4-fold</strong> links with both taking drug A and having a heart attack. Compare that to a weaker finding, <code>RR = 1.3</code>, which gives only <code>E = 1.92</code> — a much smaller confounder would erase it, so it is far easier to dismiss. Play with it:</p>
 
 <div class="tool">
   <h3>Try it — live E-value calculator</h3>
@@ -126,26 +171,43 @@
   </div>
 </div>
 
-<h2><span class="n">3</span>Reading one in the wild — the critique checklist</h2>
-<p>Fluency is mostly about <em>not</em> being fooled. Four reflexes when you see an E-value:</p>
-<p><strong>1. Benchmark it.</strong> An E-value is meaningless in isolation. Compare it to the strength of the covariates you <em>did</em> measure. If a confounder weaker than ones already adjusted-for would suffice, the result is fragile — regardless of the raw number.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[3]</a></p>
-<p><strong>2. Read the CI-limit E-value too.</strong> Always reported as a pair: one for the estimate, one for the confidence bound nearest the null. A big point E-value with a small CI-limit E-value means the result tips out of significance under weak confounding.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[1]</a></p>
-<p><strong>3. It is not a probability.</strong> An E-value of 4 is not "a 1-in-4 chance of being spurious." It is a strength threshold, and says nothing about whether a confounder that strong actually exists.</p>
-<p><strong>4. Both legs, jointly.</strong> The confounder must hit the threshold with treatment <em>and</em> outcome simultaneously. Strong on one leg, weak on the other produces far less bias than the E-value implies.</p>
+<h2><span class="n">4</span>Reading one in the wild — four reflexes</h2>
+<p>Being fluent here is mostly about <em>not getting fooled</em>. When you see an E-value in a paper, run these four checks:</p>
+<p><strong>1. Benchmark it — a number alone means nothing.</strong> An E-value of 3.4 is only impressive if a confounder that strong is implausible. Compare it to the strength of the confounders the authors <em>did</em> measure and adjust for. If a hidden confounder no stronger than one they already controlled would clear the bar, the result is fragile — no matter how big the raw E-value looks.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[3]</a></p>
+<p><strong>2. Read the CI-limit E-value, not just the point one.</strong> Good papers report a <em>pair</em>: one E-value for the estimate, and one for the end of the confidence interval closest to "no effect."</p>
+<div class="plain"><span class="lab">In plain words</span> The <strong>CI-limit E-value</strong> asks the gentler question "how much confounding to make the result merely <em>non-significant</em>?" (rather than "to erase it entirely"). A study can have an impressive point E-value of 3.4 but a CI-limit E-value of only 1.4 — meaning quite weak confounding is enough to push it past the significance line. The CI-limit number is usually the more honest one.</div>
+<p><strong>3. It is not a probability.</strong> An E-value of 4 does <em>not</em> mean "a 1-in-4 chance the result is spurious." It is a <em>strength threshold</em>, and it says nothing at all about whether a confounder that strong actually exists in the world.</p>
+<p><strong>4. Both legs, at once.</strong> The confounder has to hit the threshold with the treatment <em>and</em> with the outcome <em>simultaneously</em>. Something strongly linked to the outcome but only weakly linked to treatment (or vice versa) produces far less bias than the E-value's single number suggests.</p>
 
-<h2><span class="n">4</span>Check yourself</h2>
-<p>Pick an answer — feedback is immediate.</p>
+<div class="decoder">
+  <h3>Quick decoder — every term from this lesson</h3>
+  <dl>
+    <dt>Confounder</dt><dd>A third variable that differs between treated/untreated groups and also affects the outcome — fakes or inflates the association.</dd>
+    <dt>U (unmeasured confounder)</dt><dd>A confounder you have no data on, so you could not adjust for it. The thing sensitivity analysis worries about.</dd>
+    <dt>Conditional ignorability / no unmeasured confounding</dt><dd>The untestable assumption that, after adjusting for what you measured, treatment is as-good-as random.</dd>
+    <dt>Sensitivity analysis</dt><dd>Methods that ask how strong a U would have to be to overturn the result — instead of whether U exists.</dd>
+    <dt>Risk ratio (RR)</dt><dd>How many times more (or less) likely the outcome is in the treated vs. untreated group. RR = 2 means twice as likely; RR = 1 means no difference.</dd>
+    <dt>E-value</dt><dd>The smallest confounder strength (on the RR scale, with both treatment and outcome) needed to fully explain the result away. Bigger = more robust.</dd>
+    <dt>CI-limit E-value</dt><dd>The same idea applied to the confidence-interval edge nearest the null: how little confounding to make the result non-significant.</dd>
+    <dt>Benchmarking</dt><dd>Judging an E-value by comparing it to the strength of the confounders that were actually measured and adjusted for.</dd>
+  </dl>
+</div>
+
+<h2><span class="n">5</span>Check yourself</h2>
+<p>Pick an answer — feedback appears instantly, and explains the reasoning either way.</p>
 
 <div class="q" id="q1" data-correct="b">
-  <div class="stem">A study reports adjusted <code>RR = 1.3</code>, E-value 1.9. The strongest <em>measured</em> confounder had ~2.5-fold associations with the outcome. Robust to unmeasured confounding?</div>
-  <label><input type="radio" name="q1" value="a"> Yes — 1.9 &gt; 1, so confounding can't explain it.</label>
-  <label><input type="radio" name="q1" value="b"> Not clearly — a U no stronger than a covariate we already measured could clear the 1.9 threshold.</label>
+  <div class="stem">A study reports adjusted <code>RR = 1.3</code> with an E-value of 1.9. The strongest confounder they <em>did</em> measure had about 2.5-fold associations with the outcome. Is the result robust to unmeasured confounding?</div>
+  <div class="hint">Hint: use reflex #1 — compare 1.9 against the strength of a confounder they already adjusted for.</div>
+  <label><input type="radio" name="q1" value="a"> Yes — 1.9 is above 1, so confounding cannot explain it.</label>
+  <label><input type="radio" name="q1" value="b"> Not clearly — a hidden confounder no stronger than one they already measured (2.5) could clear the 1.9 bar.</label>
   <label><input type="radio" name="q1" value="c"> Can't tell without the p-value.</label>
   <div class="fb" id="fb1"></div>
 </div>
 
 <div class="q" id="q2" data-correct="b">
-  <div class="stem">True or false: "An E-value of 4 means roughly a 1-in-4 chance the association is non-causal."</div>
+  <div class="stem">True or false: "An E-value of 4 means roughly a 1-in-4 chance the association is not causal."</div>
+  <div class="hint">Hint: what kind of quantity is an E-value — a probability, or a strength threshold?</div>
   <label><input type="radio" name="q2" value="a"> True</label>
   <label><input type="radio" name="q2" value="b"> False</label>
   <div class="fb" id="fb2"></div>
@@ -153,33 +215,35 @@
 
 <div class="q" id="q3" data-correct="c">
   <div class="stem">For a confounder to explain away a result via the E-value, it must be associated with…</div>
-  <label><input type="radio" name="q3" value="a"> the outcome at ≥ the E-value.</label>
-  <label><input type="radio" name="q3" value="b"> the treatment at ≥ the E-value.</label>
-  <label><input type="radio" name="q3" value="c"> both treatment and outcome at ≥ the E-value, jointly, beyond measured covariates.</label>
+  <div class="hint">Hint: reflex #4 — how many "legs" must the confounder hit, and at the same time?</div>
+  <label><input type="radio" name="q3" value="a"> the outcome, at the E-value strength or more.</label>
+  <label><input type="radio" name="q3" value="b"> the treatment, at the E-value strength or more.</label>
+  <label><input type="radio" name="q3" value="c"> both treatment and outcome, jointly, at the E-value strength or more, beyond the measured covariates.</label>
   <div class="fb" id="fb3"></div>
 </div>
 
 <div class="q" id="q4" data-correct="b">
-  <div class="stem"><code>RR = 2.0</code> (95% CI 1.1–3.6), point E-value 3.4, CI-limit E-value 1.4. Authors call it "highly robust." Fair critique?</div>
-  <label><input type="radio" name="q4" value="a"> None — the point E-value of 3.4 settles it.</label>
-  <label><input type="radio" name="q4" value="b"> The CI-limit E-value of 1.4 is small: weak confounding could make it non-significant, so "highly robust" overstates it.</label>
-  <label><input type="radio" name="q4" value="c"> E-values can't be used with confidence intervals.</label>
+  <div class="stem"><code>RR = 2.0</code> (95% CI 1.1–3.6), point E-value 3.4, CI-limit E-value 1.4. The authors call it "highly robust." Is that fair?</div>
+  <div class="hint">Hint: reflex #2 — which of the two E-values tells you how fragile the significance is?</div>
+  <label><input type="radio" name="q4" value="a"> Fair — the point E-value of 3.4 settles it.</label>
+  <label><input type="radio" name="q4" value="b"> Overstated — the CI-limit E-value of 1.4 is small, so even weak confounding could make it non-significant.</label>
+  <label><input type="radio" name="q4" value="c"> Unfair to use E-values with confidence intervals at all.</label>
   <div class="fb" id="fb4"></div>
 </div>
 
 <div class="score" id="score"></div>
 
 <div class="next">
-  <strong>Your win:</strong> you now hold the reframe (SA = the strength of confounding needed to overturn a result) and can read, compute, and critique an E-value — the most common sensitivity statistic in clinical RWD.<br><br>
-  <strong>Ask your teacher (me) anything:</strong> I'm your tutor for this topic — if a step is fuzzy, ask me to re-explain, work a real paper's numbers with you, or go deeper on any reflex above.<br><br>
-  <strong>Next lesson (L02):</strong> the two postures — worst-case <em>bounds</em> (Manski) vs. parametric "how-much-confounding" methods — and where the E-value sits between them.
+  <strong>Your win:</strong> you now hold the reframe (a sensitivity analysis measures <em>the strength of confounding needed to overturn a result</em>) and you can read, compute, and critique an E-value — the single most common sensitivity statistic in clinical work.<br><br>
+  <strong>Ask me anything — I'm your tutor.</strong> If any step here is still fuzzy, tell me which one and I'll re-explain it differently, or walk through a real paper's numbers with you. No question is too basic.<br><br>
+  <strong>Next (L02):</strong> the two broad "postures" of sensitivity analysis — honest worst-case <em>bounds</em> vs. the parametric "how-much-confounding" methods like the E-value — and where each one fits.
 </div>
 
 <footer>
   <strong>Sources</strong><br>
   [1] <a href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">VanderWeele &amp; Ding (2017), Sensitivity Analysis in Observational Research: Introducing the E-Value, Ann Intern Med 167:268–274.</a><br>
-  [2] <a href="https://journals.sagepub.com/doi/10.1177/1536867X20909696" target="_blank">Linden, Mathur &amp; VanderWeele (2020), the evalue package, Stata Journal</a> — scale conversions (OR/HR/RD → RR).<br>
-  [3] <a href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">Cinelli &amp; Hazlett (2020), Making Sense of Sensitivity, JRSS-B</a> — benchmarking against measured covariates.<br>
+  [2] <a href="https://journals.sagepub.com/doi/10.1177/1536867X20909696" target="_blank">Linden, Mathur &amp; VanderWeele (2020), the evalue package, Stata Journal</a> — converting odds ratios / hazard ratios to the risk-ratio scale.<br>
+  [3] <a href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">Cinelli &amp; Hazlett (2020), Making Sense of Sensitivity, JRSS-B</a> — benchmarking confounding against measured covariates.<br>
   See also <code>reference/glossary.html</code> for every term defined here.
 </footer>
 
@@ -202,9 +266,9 @@
                 : e < 2.5 ? 'modest — benchmark against your measured covariates'
                 : e < 4   ? 'fairly robust — a fairly strong confounder would be required'
                           : 'robust — only implausibly strong confounding could explain it away';
-    sayOut.innerHTML = 'An unmeasured confounder would need associations of about <b>'+e.toFixed(2)+
+    sayOut.innerHTML = 'A hidden confounder would need associations of about <b>'+e.toFixed(2)+
       '×</b> with <em>both</em> the treatment and the outcome to fully explain away this '+dir+
-      ' association. Reading: <b>'+verdict+'</b> — but only relative to how strong a real confounder could plausibly be.';
+      ' result. Reading: <b>'+verdict+'</b> — but always judged relative to how strong a real confounder could plausibly be.';
   }
   rrInput.addEventListener('input', refresh);
   document.querySelectorAll('.chips button').forEach(function(b){
@@ -214,16 +278,16 @@
 
   var explain = {
     q1:{ b:true,
-         ok:'Correct. The E-value only has meaning relative to plausible confounding strength. Here a confounder weaker than one you already adjusted for would clear 1.9 — so the finding is fragile. This is benchmarking, reflex #1.',
-         no:'Re-think benchmarking: 1.9 is below the ~2.5 strength of a covariate you already measured, so a comparable unmeasured confounder could explain it away. The right answer is (b).' },
+         ok:'Correct. An E-value only means something next to plausible confounding strength. Here a confounder weaker than one they already adjusted for would clear 1.9 — so the finding is fragile. That is benchmarking, reflex #1.',
+         no:'Re-think benchmarking: 1.9 sits below the ~2.5 strength of a confounder they already measured, so a comparable hidden one could explain it away. The answer is (b).' },
     q2:{ b:true,
-         ok:'Correct. The E-value is a strength threshold on the risk-ratio scale, not a probability. It says nothing about how likely a confounder that strong is to exist.',
-         no:'Not quite — an E-value is never a probability. It is the confounder strength needed to nullify the result. The statement is False.' },
+         ok:'Correct. The E-value is a strength threshold on the risk-ratio scale, not a probability. It says nothing about how likely a confounder that strong is to exist. So the statement is False.',
+         no:'Not quite — an E-value is never a probability. It is the confounder strength needed to nullify the result. The statement is False, so (b).' },
     q3:{ c:true,
-         ok:'Correct. Both legs must reach the threshold simultaneously, beyond the measured covariates. Strong on one leg and weak on the other yields far less bias.',
-         no:'The defining feature of the E-value is the JOINT requirement: the confounder must hit the threshold with both treatment and outcome at once. Answer (c).' },
+         ok:'Correct. Both legs must reach the threshold at the same time, beyond the measured covariates. Strong on one leg and weak on the other produces far less bias.',
+         no:'The defining feature of the E-value is the JOINT requirement: the confounder must hit the threshold with treatment AND outcome at once. Answer (c).' },
     q4:{ b:true,
-         ok:'Correct. Always read the CI-limit E-value. A large point E-value (3.4) with a small CI-limit E-value (1.4) means weak confounding pushes it out of significance — "highly robust" overstates it.',
+         ok:'Correct. Always read the CI-limit E-value. A big point E-value (3.4) with a small CI-limit E-value (1.4) means weak confounding pushes it out of significance — so "highly robust" overstates it.',
          no:'Look at the CI-limit E-value of 1.4: weak confounding could make the result non-significant. A strong point E-value does not rescue a weak CI-limit one. Answer (b).' }
   };
   var answered = {};

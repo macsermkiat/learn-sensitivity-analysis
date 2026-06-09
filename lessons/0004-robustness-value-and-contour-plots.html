@@ -10,11 +10,12 @@
     --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
     --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
     --warnbg:#fff7e6; --warnrule:#e7c66a;
+    --plainbg:#eef4fb; --plainrule:#bcd2ee;
   }
   *{box-sizing:border-box}
   body{
     font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
+    color:var(--ink); background:var(--bg); line-height:1.65;
     max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
   }
   .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
@@ -23,12 +24,15 @@
     border-radius:999px; background:#fff}
   .lnav a:hover{background:var(--chip)}
   .lnav .spacer{flex:1}
-  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:1.6rem}
   .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
     letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
   h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
   .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
     background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  .howto{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:#fff; border:1px dashed #c5d2e6; border-radius:8px; padding:.7rem .95rem; margin:1.1rem 0 0}
+  .howto b{color:var(--term)}
   h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
      color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
   h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
@@ -43,6 +47,18 @@
   .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
     padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
   .callout b{color:#8a6d1a}
+  .plain{background:var(--plainbg); border:1px solid var(--plainrule); border-radius:8px;
+    padding:.7rem .95rem; margin:1rem 0; font-size:.93rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .plain .lab{display:inline-block; font-weight:700; color:var(--accent); text-transform:uppercase;
+    letter-spacing:.08em; font-size:.68rem; margin-right:.4rem}
+  .story{border-left:3px solid var(--accent); background:#fff; padding:.4rem 1.1rem; margin:1.1rem 0;
+    border-radius:0 6px 6px 0}
+  .decoder{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0}
+  .decoder h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .7rem; color:var(--term)}
+  .decoder dl{margin:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  .decoder dt{font-weight:700; color:var(--term); margin-top:.7rem}
+  .decoder dt:first-child{margin-top:0}
+  .decoder dd{margin:.15rem 0 0; color:var(--muted)}
   a{color:var(--accent)}
   .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
   .tool{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.2rem 1.3rem; margin:1.4rem 0}
@@ -57,7 +73,8 @@
   .out b{color:var(--term)}
   .big{font-size:1.5rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums}
   .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
-  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.4rem}
+  .q .hint{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.82rem; color:var(--muted); margin-bottom:.7rem}
   .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
     padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
   .q label:hover{background:var(--chip)}
@@ -86,20 +103,24 @@
 <header>
   <div class="kicker">Lesson 04 · Sensitivity Analysis for Causal Inference</div>
   <h1>The Robustness Value &amp; Reading a Contour Plot</h1>
-  <div class="mission">Mission tie-in: this is the skill the mission singles out — reading an OVB contour plot and a robustness value from sensemakr / dml.sensemakr output and saying what it implies. The same reading transfers from linear regression to causal ML.</div>
+  <div class="mission">Where this is heading: this is the skill your mission singles out — reading a contour plot and a robustness value from <code>sensemakr</code> / <code>dml.sensemakr</code> output and saying what it means. The very same reading carries over from plain linear regression to causal machine learning.</div>
+  <div class="howto"><b>How to read this lesson.</b> It is the most visual of the five. Take the interactive plot slowly — drag the slider and watch the dot move across the map. Every term is unpacked in a blue box, and there is a quick decoder at the end.</div>
 </header>
 
-<h2><span class="n">1</span>Two numbers describe any confounder</h2>
-<p>The E-value works on the risk-ratio scale. Cinelli &amp; Hazlett re-cast the same idea in regression terms, which is what most causal-ML output speaks.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a> Any unobserved confounder <code>U</code> is summarised by two <em>partial R²</em> values:</p>
-<div class="formula">R²<sub>D~U</sub> = share of leftover variation in <b>treatment</b> that U explains<br>R²<sub>Y~U</sub> = share of leftover variation in <b>outcome</b> that U explains</div>
-<p>Given those two, the worst-case bias on the estimate is pinned down. That is the same two-leg logic as the E-value (treatment leg × outcome leg) — now scale-free and directly comparable to the covariates you already fitted.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+<h2><span class="n">1</span>Describing a confounder with two numbers</h2>
+<p>The E-value from L01 measured confounder strength on the risk-ratio scale. Cinelli &amp; Hazlett tell the <em>same</em> story in the language of regression — which is the language most machine-learning output speaks.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a> Here, any hidden confounder <code>U</code> is summarised by two numbers:</p>
+<div class="formula">R²(D~U) = how much of the leftover variation in <b>treatment</b> U could explain<br>R²(Y~U) = how much of the leftover variation in <b>outcome</b> U could explain</div>
+<div class="plain"><span class="lab">In plain words</span> <strong>"Partial R²"</strong> is just "the share of the still-unexplained wiggle that this one variable would account for," as a fraction between 0 and 1. R²(D~U) = 0.10 means U would explain 10% of what is still unpredictable about <em>who got treated</em>, after your other variables. The two R² numbers are simply the <strong>treatment leg and the outcome leg</strong> from L01 — re-expressed as fractions instead of risk ratios. Given both, the worst-case bias on your estimate is fully determined.</div>
+<p>Why bother switching scales? Because these fractions are directly comparable to the covariates you <em>already</em> put in the model — you can literally say "U would have to explain more of the treatment than age does." That comparison is the heart of this lesson.</p>
 
-<h2><span class="n">2</span>The robustness value collapses it to one number</h2>
-<p>For a quick headline, assume the confounder is equally strong on both legs and ask: how large must that shared partial R² be to drag the estimate to the null? That single number is the <em>robustness value</em>.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
-<div class="callout"><b>Read RV like this.</b> <code>RV = 0.15</code> means a confounder explaining <strong>15% of the residual variation in both treatment and outcome</strong> would erase the result. Near 0 = fragile; near 1 = only an all-explaining confounder could do it. There is also an <code>RV</code> for the <em>significance boundary</em> (the analogue of L01's CI-limit E-value) — always read both.</div>
+<h2><span class="n">2</span>The robustness value squashes two numbers into one</h2>
+<p>Two numbers are precise but awkward for a headline. So make one simplifying move: assume the confounder is <em>equally</em> strong on both legs, and ask one question — how big would that shared fraction have to be to drag the estimate all the way to "no effect"? That single answer is the <em>robustness value</em> (RV).<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+<div class="callout"><b>Read RV like this.</b> <code>RV = 0.15</code> means: a confounder that explains <strong>15% of the leftover variation in both treatment and outcome</strong> would be enough to erase the result. Near 0 = fragile (almost any confounder would do it); near 1 = rock-solid (only a confounder that explains nearly everything could do it).</div>
+<div class="plain"><span class="lab">In plain words</span> The RV is to regression/ML exactly what the E-value is to risk ratios: one tipping-point number for "how strong before it tips." There is also a second RV for the <em>significance boundary</em> (how little confounding to make the result merely non-significant) — the direct analogue of L01's CI-limit E-value. Always read both.</div>
 
 <h2><span class="n">3</span>The contour plot — the skill that pays the rent</h2>
-<p>The contour plot is the two-number picture. Treatment-leg strength on the x-axis, outcome-leg strength on the y-axis; the curves show what the estimate becomes for each combination. The bold curve is where the estimate hits the null. <strong>Your measured covariates are plotted as reference dots</strong> — so you read robustness by comparison, not in the abstract.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+<p>The contour plot is just the two-number picture drawn out. Treatment-leg strength runs along the bottom (x-axis); outcome-leg strength runs up the side (y-axis). Every point on the map is one possible confounder, and the shading shows what your estimate would become if that confounder were real. The <strong>bold red curve</strong> marks the exact combinations where your estimate gets dragged to zero.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+<div class="plain"><span class="lab">How to actually read it</span> Your <strong>measured covariates are plotted as dots</strong>. You judge robustness by comparison, not in the abstract: find your strongest measured covariate's dot, then ask "how many times stronger than that would a hidden confounder have to be to reach the red curve?" A small multiple = fragile. Needing many times stronger = robust. Drag the slider below to move a hypothetical confounder and watch it cross (or not cross) the red line.</div>
 
 <div class="tool">
   <h3>Try it — read a contour plot</h3>
@@ -117,17 +138,31 @@
   </div>
   <div class="out" id="out"></div>
 </div>
-<p style="font-size:.82rem;color:var(--muted)">Schematic plot built from the Cinelli &amp; Hazlett bias factor for illustration; production output (<code>sensemakr</code>) uses the exact estimate and reports the RV numerically. The <em>reading skill</em> is identical.</p>
+<p style="font-size:.82rem;color:var(--muted)">This is a schematic plot built from the Cinelli &amp; Hazlett bias formula for illustration; real output (<code>sensemakr</code>) uses your exact estimate and prints the RV numerically. The <em>reading skill</em> is identical.</p>
 
 <h2><span class="n">4</span>Why this is the causal-ML bridge</h2>
-<p>The decisive point for the mission: this machinery is no longer tied to linear regression. Chernozhukov, Cinelli and colleagues extended omitted-variable-bias sensitivity to <em>double/debiased machine learning</em>, so an ATE estimated with flexible ML still gets a robustness value and a contour plot.<a class="cite" href="https://carloscinelli.com/files/Chernozhukov%20et%20al%20-%20OVB%20for%20ML.pdf" target="_blank">[2]</a> The package <code>dml.sensemakr</code> produces output you read exactly as above.<a class="cite" href="https://github.com/carloscinelli/dml.sensemakr" target="_blank">[3]</a></p>
-<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Transfer.</b> When a causal-ML paper shows an "Austen plot" or a robustness value for its DML estimate, it is the same two-leg, benchmark-against-covariates reading you just practised — not a new skill to learn.</div>
+<p>Here is the decisive point for your mission. This machinery is no longer tied to plain linear regression. Chernozhukov, Cinelli and colleagues extended the same omitted-variable-bias idea to <em>double / debiased machine learning</em>, so an effect estimated with flexible ML still gets a robustness value and a contour plot.<a class="cite" href="https://carloscinelli.com/files/Chernozhukov%20et%20al%20-%20OVB%20for%20ML.pdf" target="_blank">[2]</a> The package <code>dml.sensemakr</code> prints output you read exactly as above.<a class="cite" href="https://github.com/carloscinelli/dml.sensemakr" target="_blank">[3]</a></p>
+<div class="plain"><span class="lab">In plain words</span> <strong>DML (double / debiased machine learning)</strong> is a way to estimate a causal effect while using flexible ML models for the messy nuisance parts, yet still get trustworthy confidence intervals. The headline: when a causal-ML paper shows an "Austen plot" or an RV for its DML estimate, that is the <em>same</em> two-leg, benchmark-against-covariates reading you just practised — not a new skill to learn.</div>
+
+<div class="decoder">
+  <h3>Quick decoder — every term from this lesson</h3>
+  <dl>
+    <dt>Partial R² (treatment-side / outcome-side)</dt><dd>The fraction of still-unexplained variation in treatment (or outcome) that a confounder would account for. The two legs, expressed as fractions 0–1.</dd>
+    <dt>Robustness value (RV)</dt><dd>The single shared partial-R² (assumed equal on both legs) that would drag the estimate to the null. Near 0 = fragile; near 1 = robust. The regression/ML analogue of the E-value.</dd>
+    <dt>Significance-boundary RV</dt><dd>The smaller RV for "how little confounding to make the result non-significant." The analogue of the CI-limit E-value; read it too.</dd>
+    <dt>Contour plot</dt><dd>A 2-D map: treatment-leg strength across, outcome-leg strength up. Shading shows the adjusted estimate; the bold curve is where it hits the null.</dd>
+    <dt>Null curve</dt><dd>The set of (treatment-leg, outcome-leg) combinations that bring the estimate exactly to "no effect."</dd>
+    <dt>Benchmarking</dt><dd>Reading robustness by comparing a hypothetical confounder to the dots for your measured covariates.</dd>
+    <dt>DML / Austen plot</dt><dd>Double/debiased ML — flexible ML with valid inference. Its sensitivity picture (sometimes styled an "Austen plot") reads the same as the regression contour plot.</dd>
+  </dl>
+</div>
 
 <h2><span class="n">5</span>Check yourself</h2>
-<p>Pick an answer — feedback is immediate.</p>
+<p>Pick an answer — feedback appears instantly.</p>
 
 <div class="q" id="q1" data-correct="b">
   <div class="stem">A DML study reports <code>RV = 0.03</code>. The strongest measured covariate has partial-R² of about 0.08 on each leg. Robust?</div>
+  <div class="hint">Hint: benchmark it — is 0.03 above or below the 0.08 of a covariate you already adjusted for?</div>
   <label><input type="radio" name="q1" value="a"> Yes — RV &gt; 0 means confounding can't overturn it.</label>
   <label><input type="radio" name="q1" value="b"> Fragile — a confounder weaker than a covariate you already adjusted for (0.03 &lt; 0.08) would kill it.</label>
   <label><input type="radio" name="q1" value="c"> Need the risk ratio to judge.</label>
@@ -136,6 +171,7 @@
 
 <div class="q" id="q2" data-correct="c">
   <div class="stem">On the contour plot, the bold curve represents…</div>
+  <div class="hint">Hint: it is the set of confounders that make the estimate exactly zero.</div>
   <label><input type="radio" name="q2" value="a"> the confidence interval.</label>
   <label><input type="radio" name="q2" value="b"> the strength of the measured covariates.</label>
   <label><input type="radio" name="q2" value="c"> the (treatment-leg, outcome-leg) combinations at which the adjusted estimate equals the null.</label>
@@ -144,6 +180,7 @@
 
 <div class="q" id="q3" data-correct="a">
   <div class="stem">A covariate dot sits far <em>inside</em> the "result killed" region (past the null curve). What does that tell you?</div>
+  <div class="hint">Hint: that dot is a confounder you already measured — and it lands past the breaking point.</div>
   <label><input type="radio" name="q3" value="a"> An unmeasured confounder merely as strong as that one measured covariate would already nullify the result — fragile.</label>
   <label><input type="radio" name="q3" value="b"> The covariate is mismeasured.</label>
   <label><input type="radio" name="q3" value="c"> The result is robust, since the covariate was adjusted for.</label>
@@ -152,6 +189,7 @@
 
 <div class="q" id="q4" data-correct="b">
   <div class="stem">Why does the robustness-value / contour framework matter specifically for causal ML?</div>
+  <div class="hint">Hint: what did Chernozhukov et al. extend, and to what kind of estimator?</div>
   <label><input type="radio" name="q4" value="a"> ML estimates can't be confounded, so it's just a formality.</label>
   <label><input type="radio" name="q4" value="b"> OVB sensitivity was extended to DML, so flexible ML estimates get the same RV + contour reading as linear models.</label>
   <label><input type="radio" name="q4" value="c"> It replaces the need for any causal assumptions in ML.</label>
@@ -162,8 +200,8 @@
 
 <div class="next">
   <strong>Your win:</strong> you can read a robustness value, find the null curve on a contour plot, and judge robustness by benchmarking against measured covariates — for linear models <em>and</em> DML output. That is the core mission skill.<br><br>
-  <strong>Ask your teacher (me) anything:</strong> want to read a real <code>sensemakr</code> table, or see how the RV relates back to the E-value numerically? Ask.<br><br>
-  <strong>Next lesson (L05):</strong> negative controls — the design-based <em>detector</em> that complements every calibration method you've now met.
+  <strong>Ask me anything — I'm your tutor.</strong> Want to read a real <code>sensemakr</code> table together, or see how the RV relates back to the E-value numerically? Ask.<br><br>
+  <strong>Next (L05):</strong> negative controls — the design-based <em>detector</em> that complements every calibration method you've now met.
 </div>
 
 <footer>
@@ -257,7 +295,7 @@
   var explain = {
     q1:{ ok:'Correct. RV is benchmarked, not absolute: 0.03 is below the 0.08 of a covariate you already adjusted for, so a comparable unmeasured confounder would nullify it. Fragile.',
          no:'Benchmark it: RV 0.03 is weaker than the 0.08 covariate you already fit, so an equally ordinary confounder kills the result. Answer (b).' },
-    q2:{ ok:'Correct. The bold curve is the locus of (treatment-leg, outcome-leg) strengths that bring the adjusted estimate exactly to the null.',
+    q2:{ ok:'Correct. The bold curve is the set of (treatment-leg, outcome-leg) strengths that bring the adjusted estimate exactly to the null.',
          no:'The bold curve is the null contour: every point on it drives the estimate to zero. Not a CI and not the covariates. Answer (c).' },
     q3:{ ok:'Correct. If a measured covariate sits past the null curve, an unmeasured confounder no stronger than it would already overturn the result — a textbook fragile finding.',
          no:'A covariate dot beyond the null curve means a confounder of that ordinary strength suffices to kill the result — fragile. Answer (a).' },

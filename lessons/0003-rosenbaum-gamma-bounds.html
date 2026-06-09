@@ -10,11 +10,12 @@
     --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
     --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
     --warnbg:#fff7e6; --warnrule:#e7c66a;
+    --plainbg:#eef4fb; --plainrule:#bcd2ee;
   }
   *{box-sizing:border-box}
   body{
     font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-    color:var(--ink); background:var(--bg); line-height:1.6;
+    color:var(--ink); background:var(--bg); line-height:1.65;
     max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
   }
   .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
@@ -23,12 +24,15 @@
     border-radius:999px; background:#fff}
   .lnav a:hover{background:var(--chip)}
   .lnav .spacer{flex:1}
-  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:1.6rem}
   .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
     letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
   h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
   .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
     background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  .howto{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:#fff; border:1px dashed #c5d2e6; border-radius:8px; padding:.7rem .95rem; margin:1.1rem 0 0}
+  .howto b{color:var(--term)}
   h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
      color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
   h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
@@ -43,6 +47,21 @@
   .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
     padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
   .callout b{color:#8a6d1a}
+  .plain{background:var(--plainbg); border:1px solid var(--plainrule); border-radius:8px;
+    padding:.7rem .95rem; margin:1rem 0; font-size:.93rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .plain .lab{display:inline-block; font-weight:700; color:var(--accent); text-transform:uppercase;
+    letter-spacing:.08em; font-size:.68rem; margin-right:.4rem}
+  .story{border-left:3px solid var(--accent); background:#fff; padding:.4rem 1.1rem; margin:1.1rem 0;
+    border-radius:0 6px 6px 0}
+  .steps{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9rem; background:#fff;
+    border:1px solid var(--rule); border-radius:8px; padding:.9rem 1.1rem; margin:1rem 0; line-height:1.9}
+  .steps .c{color:var(--muted)}
+  .decoder{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0}
+  .decoder h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .7rem; color:var(--term)}
+  .decoder dl{margin:0; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  .decoder dt{font-weight:700; color:var(--term); margin-top:.7rem}
+  .decoder dt:first-child{margin-top:0}
+  .decoder dd{margin:.15rem 0 0; color:var(--muted)}
   a{color:var(--accent)}
   .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
   .tool{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.2rem 1.3rem; margin:1.4rem 0}
@@ -61,7 +80,8 @@
     background:var(--chip); border:1px solid #ccd5e2; border-radius:999px; padding:.3rem .7rem; color:var(--term)}
   .chips button:hover{background:#e1e9f4}
   .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
-  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.4rem}
+  .q .hint{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.82rem; color:var(--muted); margin-bottom:.7rem}
   .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
     padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
   .q label:hover{background:var(--chip)}
@@ -90,18 +110,32 @@
 <header>
   <div class="kicker">Lesson 03 · Sensitivity Analysis for Causal Inference</div>
   <h1>Rosenbaum Γ-Bounds for Matched Designs</h1>
-  <div class="mission">Mission tie-in: matched-cohort and case-control RWD studies report robustness as a Γ, not an E-value. To critique them you must read Γ correctly — and know the one trap that fools most readers.</div>
+  <div class="mission">Where this is heading: matched-cohort and case-control studies usually report their robustness as a <em>Γ</em> (gamma), not an E-value. To critique those papers you need to read Γ correctly — and dodge the one trap that fools most readers.</div>
+  <div class="howto"><b>How to read this lesson.</b> Γ is the Greek letter gamma; treat it as just "the dial." Every term is unpacked in a blue box on first use, and there is one slider so you can feel what a big vs. small Γ means. One idea, three angles.</div>
 </header>
 
-<h2><span class="n">1</span>The setup: randomization-within-a-match, broken a little</h2>
-<p>Rosenbaum's framework lives in <em>matched</em> designs — pairs or sets of units identical on the measured covariates, differing in treatment.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a> If matching captured every confounder, then <em>within</em> a matched set treatment would be as-good-as-randomized: each unit equally likely to be the treated one. The test (sign-rank, McNemar, etc.) assumes exactly that.</p>
-<p>Hidden bias means an unmeasured <code>U</code> tilts those odds. Γ (gamma) is the <strong>dial</strong> on that tilt:</p>
-<div class="formula">1/Γ &nbsp;≤&nbsp; odds(treated | unit i) / odds(treated | unit j) &nbsp;≤&nbsp; Γ<br><span style="color:var(--muted);font-size:.82rem">for any two units i, j in the same matched set (identical on measured covariates)</span></div>
-<div class="callout"><b>Read Γ like this.</b> <code>Γ = 1</code>: matching worked, assignment is random within sets — no hidden bias. <code>Γ = 2</code>: an unmeasured factor could make one matched unit up to <em>twice</em> as likely as its partner to be treated. The larger Γ can grow before your result loses significance, the more robust the finding.<a class="cite" href="https://pages.cs.wisc.edu/~hyunseung/stat992_sp24/RosenbaumSens.html" target="_blank">[2]</a></div>
+<h2><span class="n">1</span>The setup: a coin flip inside each matched pair</h2>
+<p>Rosenbaum's method lives in <em>matched</em> studies — where each treated unit is paired with an untreated one that looks identical on everything you measured.</p>
+<div class="story">
+  <p>Imagine a study of a surgery. For every patient who had the surgery, you find an untreated patient of the same age, sex, comorbidities, and lab values, and pair them up. Within each pair, the two look the same on paper. If your matching truly captured everything that matters, then <em>which one of the pair got the surgery</em> is essentially a coin flip — 50/50.</p>
+</div>
+<p>If assignment really is a coin flip within each pair, the usual paired test (sign-rank, McNemar, and friends) is valid, and a significant result means a real effect.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a> But "hidden bias" means some unmeasured <code>U</code> secretly loaded the coin — one member of the pair was actually more likely to get treated. Γ is the dial that measures how loaded the coin could be:</p>
+<div class="formula">1/Γ &nbsp;≤&nbsp; (odds person i is the treated one) / (odds person j is the treated one) &nbsp;≤&nbsp; Γ<br><span style="color:var(--muted);font-size:.82rem">for any two people i, j in the same matched pair (identical on what you measured)</span></div>
+<div class="plain"><span class="lab">In plain words</span> <strong>Γ = 1</strong> means a perfectly fair coin — matching worked, no hidden bias. <strong>Γ = 2</strong> means the coin could be loaded up to 2-to-1: one person in a pair could be up to <em>twice</em> as likely as their partner to receive treatment, because of something you did not measure. The bigger Γ can get <em>before your result loses significance</em>, the more robust the finding.<a class="cite" href="https://pages.cs.wisc.edu/~hyunseung/stat992_sp24/RosenbaumSens.html" target="_blank">[2]</a></div>
 
 <h2><span class="n">2</span>What the analysis actually computes</h2>
-<p>For each candidate Γ, Rosenbaum derives the <em>worst-case</em> distribution of the test statistic — the most adverse way that bias of magnitude Γ could be hiding — and from it a worst-case (upper-bound) p-value.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a> As Γ rises from 1, that p-value rises. The reported number is the <strong>Γ at which the worst-case p-value crosses your α</strong> — the point where the conclusion is no longer safe from hidden bias.</p>
-<p>The classic demonstration is smoking and lung cancer: in matched data the association stays significant out to very large Γ (around 5–6).<a class="cite" href="https://pages.cs.wisc.edu/~hyunseung/stat992_sp24/RosenbaumSens.html" target="_blank">[2]</a> An unmeasured confounder would have to make smokers many times more likely to smoke <em>and</em> push the outcome hard — wildly implausible — which is precisely why an observational result is treated as causal.</p>
+<p>You do not pick Γ once. You sweep it upward and watch what happens to your p-value. Here is the loop, in plain steps:</p>
+<div class="steps">
+  1.  set Γ = 1.0          <span class="c">&larr; assume a fair coin (no hidden bias)</span><br>
+  2.  imagine the WORST    <span class="c">&larr; the most damaging way a bias of size Γ could hide</span><br>
+  3.  compute worst p      <span class="c">&larr; the largest p-value that bias could produce</span><br>
+  4.  nudge Γ up, repeat   <span class="c">&larr; as Γ rises, the worst-case p-value rises too</span><br>
+  5.  report the Γ where p crosses 0.05   <span class="c">&larr; the breaking point</span>
+</div>
+<p>That reported breaking point — the <strong>Γ at which the worst-case p-value finally exceeds your significance threshold</strong> — is the headline number. Below it, hidden bias of that size still cannot explain your result away; above it, it could.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a></p>
+<div class="story">
+  <p><strong>The famous example.</strong> For smoking and lung cancer in matched data, the association stays significant all the way out to a Γ of roughly 5–6.<a class="cite" href="https://pages.cs.wisc.edu/~hyunseung/stat992_sp24/RosenbaumSens.html" target="_blank">[2]</a> To explain that away as pure bias, an unmeasured confounder would have to make smokers <em>many</em> times more likely to be smokers — which is wildly implausible. That extreme robustness is a big part of why this observational finding is accepted as causal.</p>
+</div>
 
 <div class="tool">
   <h3>Try it — read a Γ robustness gauge</h3>
@@ -122,23 +156,39 @@
 </div>
 
 <h2><span class="n">3</span>The trap: Γ is only the treatment leg</h2>
-<p>This is where most readers slip. Γ bounds only how much <code>U</code> distorts the <em>odds of treatment</em>. It says nothing, by itself, about how strongly <code>U</code> drives the <em>outcome</em>.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a> To actually bias the estimate, a confounder must move <em>both</em> — exactly like the E-value's two-leg requirement (L01).</p>
-<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Amplification.</b> A reported Γ corresponds to a whole <em>curve</em> of (treatment-leg, outcome-leg) strength pairs that would produce it — Rosenbaum &amp; Silber's amplification into (Λ, Δ). So "insensitive up to Γ = 1.5" means a confounder of <em>moderate</em> strength on both legs would suffice. A bare Γ is harder to interpret than an E-value until you amplify it. Don't read Γ as if it were the full confounder strength.</div>
-<p>Practical contrast for your toolkit: <strong>Γ is design-based</strong> (needs a matched study, lives on the treatment-odds scale) while the <strong>E-value is analysis-based</strong> (works on any adjusted estimate, lives on the risk-ratio scale). Same spirit as L02's spectrum — both are Posture B calibrations, just different dials.</p>
+<p>This is where most readers slip, so slow down here. Γ measures only how much <code>U</code> distorts the <em>odds of getting treated</em>. By itself it says <strong>nothing</strong> about how strongly <code>U</code> drives the <em>outcome</em>.<a class="cite" href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">[1]</a></p>
+<div class="plain"><span class="lab">In plain words</span> Remember the E-value's "both legs" rule from L01: to actually create bias, a confounder must move <em>both</em> the treatment <em>and</em> the outcome. Γ only reports on the treatment leg. So a Γ on its own is an <em>incomplete</em> picture of confounder strength — half the story.</div>
+<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Amplification.</b> A single reported Γ actually corresponds to a whole <em>curve</em> of (treatment-leg strength, outcome-leg strength) pairs that could produce it — this translation is Rosenbaum &amp; Silber's "amplification." So "insensitive up to Γ = 1.5" really means: a confounder of <em>moderate</em> strength on <em>both</em> legs would be enough to break it. Until you amplify it, a bare Γ is harder to interpret than an E-value. Never read Γ as if it were the full confounder strength.</div>
+<p>One contrast worth filing away: <strong>Γ is design-based</strong> (it needs a matched study and lives on the treatment-odds scale), while the <strong>E-value is analysis-based</strong> (it works on any adjusted estimate and lives on the risk-ratio scale). Same spirit as L02's map — both are Posture B calibrations, just turning different dials.</p>
+
+<div class="decoder">
+  <h3>Quick decoder — every term from this lesson</h3>
+  <dl>
+    <dt>Matched design</dt><dd>A study where each treated unit is paired with an untreated unit identical on the measured covariates.</dd>
+    <dt>Hidden bias</dt><dd>An unmeasured confounder U that made one member of a matched pair more likely than the other to be treated — a "loaded coin."</dd>
+    <dt>Γ (gamma)</dt><dd>The dial for how loaded that coin could be: the largest odds ratio of treatment between two matched units. Γ = 1 is a fair coin (no hidden bias).</dd>
+    <dt>Worst-case p-value</dt><dd>For a given Γ, the largest p-value that bias of that size could produce. It rises as Γ rises.</dd>
+    <dt>Robustness (in Γ terms)</dt><dd>How far above 1 you can push Γ before the worst-case p-value crosses significance. Higher = more robust.</dd>
+    <dt>Treatment leg vs. outcome leg</dt><dd>The two ways a confounder must act to bias a result. Γ constrains only the treatment leg.</dd>
+    <dt>Amplification</dt><dd>Translating a single Γ into the curve of (treatment-leg, outcome-leg) strength pairs that produce it — needed to compare Γ to an E-value.</dd>
+  </dl>
+</div>
 
 <h2><span class="n">4</span>Check yourself</h2>
-<p>Pick an answer — feedback is immediate.</p>
+<p>Pick an answer — feedback appears instantly.</p>
 
 <div class="q" id="q1" data-correct="b">
   <div class="stem">A matched study reports the result is "insensitive to hidden bias up to Γ = 1.3." Interpretation?</div>
+  <div class="hint">Hint: robustness = how far above 1 Γ climbs. Is 1.3 far, or barely above a fair coin?</div>
   <label><input type="radio" name="q1" value="a"> Very robust — Γ &gt; 1 means bias can't overturn it.</label>
-  <label><input type="radio" name="q1" value="b"> Fragile — a fairly small departure from random assignment (odds tilted ~1.3×) already breaks significance.</label>
+  <label><input type="radio" name="q1" value="b"> Fragile — a fairly small departure from a fair coin (odds tilted ~1.3×) already breaks significance.</label>
   <label><input type="radio" name="q1" value="c"> Can't tell — Γ isn't interpretable without the sample size.</label>
   <div class="fb" id="fb1"></div>
 </div>
 
 <div class="q" id="q2" data-correct="c">
   <div class="stem">What does Γ = 2 literally bound?</div>
+  <div class="hint">Hint: Γ lives on the treatment-<em>odds</em> scale, inside a matched pair.</div>
   <label><input type="radio" name="q2" value="a"> The risk ratio for the outcome could be off by 2×.</label>
   <label><input type="radio" name="q2" value="b"> The confounder explains 2× the outcome variance.</label>
   <label><input type="radio" name="q2" value="c"> Two units matched on measured covariates could differ up to 2-fold in their odds of being the treated one.</label>
@@ -147,6 +197,7 @@
 
 <div class="q" id="q3" data-correct="b">
   <div class="stem">Author: "Our Γ of 1.8 is large, so an unmeasured confounder would need an enormous effect on the outcome to matter." Fair?</div>
+  <div class="hint">Hint: this is the trap from §3 — which leg does Γ actually constrain?</div>
   <label><input type="radio" name="q3" value="a"> Fair — large Γ directly means large required outcome effect.</label>
   <label><input type="radio" name="q3" value="b"> Overstated — Γ bounds only the treatment-assignment leg; outcome strength is separate and must be amplified to judge.</label>
   <label><input type="radio" name="q3" value="c"> Unfair — Γ has nothing to do with confounding.</label>
@@ -154,7 +205,8 @@
 </div>
 
 <div class="q" id="q4" data-correct="a">
-  <div class="stem">You're handed a doubly-robust ATE from a DML model (no matching). A colleague asks for "the Γ." Best reply?</div>
+  <div class="stem">You're handed an ATE from a machine-learning (DML) model with no matching. A colleague asks for "the Γ." Best reply?</div>
+  <div class="hint">Hint: Γ needs a matched design. What tool fits an unmatched estimate instead?</div>
   <label><input type="radio" name="q4" value="a"> Γ is a matched-design statistic; for an unmatched ML estimate, use a robustness value / E-value instead.</label>
   <label><input type="radio" name="q4" value="b"> Compute Γ exactly as for matched data; it's design-agnostic.</label>
   <label><input type="radio" name="q4" value="c"> Γ and the robustness value are identical, so either label is fine.</label>
@@ -165,8 +217,8 @@
 
 <div class="next">
   <strong>Your win:</strong> you can read a Γ, judge robustness from how far it climbs above 1, and you won't fall for the trap of treating Γ (a treatment-leg dial) as the whole confounder strength.<br><br>
-  <strong>Ask your teacher (me) anything:</strong> want to walk through a real <code>sensitivitymv</code>/<code>rbounds</code> output, or see how amplification turns a Γ into an E-value-like pair? Ask.<br><br>
-  <strong>Next lesson (L04):</strong> the robustness value and the contour plot — the analysis-based calibration that scales all the way to causal ML.
+  <strong>Ask me anything — I'm your tutor.</strong> Want to walk through a real <code>sensitivitymv</code>/<code>rbounds</code> output, or see exactly how amplification turns a Γ into an E-value-like pair? Ask.<br><br>
+  <strong>Next (L04):</strong> the robustness value and the contour plot — the analysis-based calibration that scales all the way to causal machine learning. This is the lesson the mission cares about most.
 </div>
 
 <footer>
@@ -174,7 +226,7 @@
   [1] <a href="http://www-stat.wharton.upenn.edu/~rosenbap/BehStatSen.pdf" target="_blank">Rosenbaum, Sensitivity Analysis in Observational Studies (encyclopedia entry, Wharton).</a><br>
   [2] <a href="https://pages.cs.wisc.edu/~hyunseung/stat992_sp24/RosenbaumSens.html" target="_blank">Kang, Rosenbaum's Sensitivity Analysis (For Matched Pairs), UW-Madison course notes</a> — intuition + the <code>rbounds</code>/<code>sensitivitymv</code> workflow.<br>
   Amplification of Γ into (Λ, Δ): Rosenbaum &amp; Silber (2009), Amplification of Sensitivity Analysis, JASA.<br>
-  See also <code>reference/glossary.html</code> — "Rosenbaum Γ-bound."
+  See also <code>reference/glossary.html</code> — "Rosenbaum Γ-bound," "Amplification."
 </footer>
 
 <script>
@@ -182,16 +234,16 @@
   var gmark = document.getElementById('gmark'), out = document.getElementById('out');
   function pct(g){ return (g - 1) / (6 - 1) * 100; }
   function verdict(g){
-    if(g < 1.25) return ['very fragile','A barely-detectable tilt from random assignment erases significance. An observational claim here is weak.'];
-    if(g < 2)    return ['modest','Survives small hidden bias only. Benchmark: is a tilt this size plausible given what you could not measure?'];
-    if(g < 4)    return ['fairly robust','Withstands a substantial departure from random assignment. Reasonable confidence the finding is not pure hidden bias.'];
+    if(g < 1.25) return ['very fragile','A barely-detectable tilt away from a fair coin erases significance. An observational claim here is weak.'];
+    if(g < 2)    return ['modest','Survives only small hidden bias. Benchmark: is a tilt this size plausible given what you could not measure?'];
+    if(g < 4)    return ['fairly robust','Withstands a substantial loading of the coin. Reasonable confidence the finding is not pure hidden bias.'];
     return ['robust','Withstands large hidden bias — smoking/lung-cancer territory. Only an implausibly strong unmeasured confounder could explain it away.'];
   }
   function refresh(){
     var g = parseFloat(gam.value); gval.textContent = g.toFixed(1);
     gmark.style.left = pct(g) + '%';
     var v = verdict(g);
-    out.innerHTML = 'Result holds until an unmeasured factor tilts within-set treatment odds by <b>' + g.toFixed(1) +
+    out.innerHTML = 'The result holds until an unmeasured factor tilts within-pair treatment odds by <b>' + g.toFixed(1) +
       '×</b>. Reading: <b>' + v[0] + '</b> — ' + v[1] +
       '<br><b>Remember:</b> this is the <em>treatment leg only</em>; a real confounder must also move the outcome.';
   }
@@ -202,11 +254,11 @@
   refresh();
 
   var explain = {
-    q1:{ ok:'Correct. Γ = 1.3 means a small tilt away from random assignment already kills significance — fragile. Robustness is about how far above 1 Γ can climb.',
+    q1:{ ok:'Correct. Γ = 1.3 means a small tilt away from a fair coin already kills significance — fragile. Robustness is about how far above 1 Γ can climb.',
          no:'Γ just above 1 is fragile, not robust: only a tiny hidden bias is tolerated before significance is lost. Answer (b).' },
-    q2:{ ok:'Correct. Γ bounds the within-matched-set odds ratio of being the treated unit — the treatment-assignment leg, nothing else.',
-         no:'Γ is on the treatment-odds scale: how much two matched units could differ in odds of treatment. Not an outcome RR or variance share. Answer (c).' },
-    q3:{ ok:'Correct. Γ constrains only the treatment leg. Outcome strength is a separate dimension; you must amplify Γ into a (treatment, outcome) pair before claiming anything about required outcome effect.',
+    q2:{ ok:'Correct. Γ bounds the within-matched-pair odds ratio of being the treated unit — the treatment-assignment leg, nothing else.',
+         no:'Γ is on the treatment-odds scale: how much two matched units could differ in odds of treatment. Not an outcome risk ratio or variance share. Answer (c).' },
+    q3:{ ok:'Correct. Γ constrains only the treatment leg. Outcome strength is a separate dimension; you must amplify Γ into a (treatment, outcome) pair before claiming anything about the required outcome effect.',
          no:'This is the core trap: Γ is the treatment-assignment leg only. It does not by itself imply a large required outcome effect — amplification is needed. Answer (b).' },
     q4:{ ok:'Correct. Γ is intrinsically a matched-design statistic. For an unmatched ML/DML estimate, the analysis-based robustness value (or E-value) is the right tool — that is L04.',
          no:'Γ needs a matched design. For a DML ATE with no matching, reach for a robustness value or E-value instead. Answer (a).' }
