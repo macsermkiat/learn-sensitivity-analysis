@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — Sensitivity Analysis for Causal Inference</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6472; --rule:#e2e6ec; --accent:#3a5a8c;
+    --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--bg); line-height:1.5;
+    max-width:820px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
+  }
+  .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.82rem; margin-bottom:1.6rem; padding-bottom:.8rem; border-bottom:1px solid var(--rule); flex-wrap:wrap}
+  .lnav a{color:var(--accent); text-decoration:none; padding:.32rem .6rem; border:1px solid var(--rule);
+    border-radius:999px; background:#fff}
+  .lnav a:hover{background:var(--chip)}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1rem; margin-bottom:2rem}
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
+  h1{font-size:1.9rem; margin:.3rem 0 .2rem; line-height:1.15}
+  .sub{color:var(--muted); font-size:.95rem}
+  dl{margin:0}
+  dt{font-weight:700; color:var(--term); font-size:1.08rem; margin:1.7rem 0 .35rem;
+     font-family:ui-sans-serif,system-ui,sans-serif}
+  dt .alt{font-weight:400; color:var(--muted); font-size:.85rem}
+  dd{margin:0 0 .2rem; padding-left:0}
+  dd + dd{margin-top:.5rem}
+  .scale{font-style:italic; color:var(--muted); font-size:.9rem}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.86em;
+    background:var(--chip); padding:.08em .35em; border-radius:4px}
+  .group{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.1em; color:var(--accent);
+    border-top:1px solid var(--rule); padding-top:1.2rem; margin-top:2.4rem; font-weight:700}
+  footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
+    color:var(--muted); font-size:.82rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff; padding:1rem; max-width:none}
+    dt{break-after:avoid} dd{break-inside:avoid}
+    .group{break-before:auto}
+  }
+</style>
+</head>
+<body>
+<nav class="lnav">
+  <a href="../index.html">Home</a>
+  <a href="../lessons/0001-what-sensitivity-analysis-asks.html">Lessons</a>
+</nav>
+<header>
+  <div class="kicker">Reference · Quick Lookup</div>
+  <h1>Glossary — Sensitivity Analysis for Causal Inference</h1>
+  <div class="sub">Canonical definitions. Reused verbatim across all lessons. Terms grouped: core idea → the tools → design-based checks.</div>
+</header>
+
+<div class="group">Core idea</div>
+<dl>
+  <dt>Conditional ignorability <span class="alt">(a.k.a. no unmeasured confounding, NUC, exchangeability)</span></dt>
+  <dd>The central, <em>untestable</em> assumption of observational causal inference: given the measured covariates, treatment is as-good-as-random with respect to potential outcomes. Every adjusted estimate (regression, matching, IPW, DML) leans on it.</dd>
+
+  <dt>Unmeasured confounder <span class="alt">(U)</span></dt>
+  <dd>A variable associated with <em>both</em> the treatment and the outcome that was not measured/adjusted for. Its existence is what breaks conditional ignorability and biases the estimate. Sensitivity analysis is the study of how much such a U would matter.</dd>
+
+  <dt>Sensitivity analysis</dt>
+  <dd>A set of methods that ask: <strong>how strong would a violation of the no-unmeasured-confounding assumption have to be to overturn my conclusion?</strong> It does not test whether confounding exists; it quantifies the bias required to explain the result away.</dd>
+
+  <dt>Benchmarking</dt>
+  <dd>Calibrating "how strong is plausible?" by comparing a hypothesised U against the strength of the <em>measured</em> covariates. "Would U need to be 3× stronger than the strongest variable we did measure?" turns an abstract number into a judgement.</dd>
+</dl>
+
+<div class="group">The parametric tools</div>
+<dl>
+  <dt>E-value</dt>
+  <dd>The minimum strength of association — on the <span class="scale">risk-ratio scale</span> — that an unmeasured confounder would need with <em>both</em> treatment and outcome (above and beyond measured covariates) to fully explain away the observed association. Larger = more robust. An E-value of 1 means none needed (result already null).</dd>
+  <dd><span class="scale">Formula:</span> for risk ratio <code>RR ≥ 1</code>, <code>E = RR + √(RR·(RR−1))</code>. For <code>RR &lt; 1</code>, first take <code>RR* = 1/RR</code>, then apply.</dd>
+
+  <dt>CI-limit E-value</dt>
+  <dd>The E-value computed for the confidence-interval bound <em>nearest the null</em>, not the point estimate. Answers "how much confounding to make the result non-significant?" Always reported alongside the point E-value; a study can have a large point E-value but a fragile CI-limit one.</dd>
+
+  <dt>Risk-ratio scale <span class="alt">(conversions)</span></dt>
+  <dd>E-values are defined on the RR scale. Other estimates are first converted: odds ratio (rare outcome) <code>RR ≈ OR</code>; hazard ratio <code>RR ≈ HR</code> (rare) or via a correction; standardized mean difference <code>RR ≈ exp(0.91·d)</code>. Getting the conversion right is essential when reading a paper.</dd>
+
+  <dt>Omitted variable bias <span class="alt">(OVB)</span></dt>
+  <dd>The classical regression idea — bias from leaving out a relevant variable — generalised into a sensitivity framework. The bias is bounded by how much of the variation in treatment and in outcome the omitted variable could explain.</dd>
+
+  <dt>Partial R² <span class="alt">(treatment-side &amp; outcome-side)</span></dt>
+  <dd>Scale-free sensitivity parameters: the share of residual variation in the <em>treatment</em>, and in the <em>outcome</em>, that the unobserved confounder would explain. Two numbers fully parameterise the worst-case bias (Cinelli &amp; Hazlett). Enables transparent benchmarking against measured covariates.</dd>
+
+  <dt>Robustness value <span class="alt">(RV)</span></dt>
+  <dd>A single summary: the minimum partial R² (assumed equal on both the treatment and outcome sides) that confounding would need to reduce the estimate to the null (<code>RV<sub>q=1</sub></code>) or to the edge of significance. The OVB-framework analogue of the E-value; extends to ML/DML estimators via <code>dml.sensemakr</code>.</dd>
+
+  <dt>Contour / Austen plot</dt>
+  <dd>A 2-D map with treatment-side strength on one axis and outcome-side strength on the other; curves show where the estimate (or its CI) hits the null. Measured covariates are plotted as reference points so you can read robustness at a glance. "Austen plot" is the causal-ML styling (Veitch &amp; Zaveri).</dd>
+
+  <dt>Worst-case bounds <span class="alt">(partial identification, Manski)</span></dt>
+  <dd>Instead of one number, report the <em>range</em> of effects consistent with the data under bounded assumptions. Makes no point claim; brackets what is and isn't knowable. The non-parametric counterpart to the parametric tools above.</dd>
+</dl>
+
+<div class="group">Design-based checks</div>
+<dl>
+  <dt>Rosenbaum Γ-bound <span class="alt">(gamma)</span></dt>
+  <dd>For matched observational designs: Γ measures how much two matched units could differ in their odds of treatment due to an unmeasured U. The analysis reports the Γ at which the result stops being significant. Larger Γ before significance is lost = more robust. <em>Γ bounds only the treatment-assignment leg</em> — not the confounder's effect on the outcome.</dd>
+
+  <dt>Amplification <span class="alt">(of Γ; Rosenbaum &amp; Silber)</span></dt>
+  <dd>The translation of a single Γ into the <em>curve</em> of (treatment-leg, outcome-leg) strength pairs that would produce it. Because a bare Γ describes only the treatment leg, amplification is what makes it comparable to E-value / partial-R² two-leg thinking. A given Γ corresponds to many (Λ, Δ) combinations.</dd>
+
+  <dt>Negative control <span class="alt">(outcome or exposure)</span></dt>
+  <dd>A variable that should have <em>no</em> true causal relationship in the analysis but shares the same confounding structure. A non-null association on the negative control signals residual confounding. A design-based detector rather than a quantifier.</dd>
+
+  <dt>Tipping-point analysis</dt>
+  <dd>Vary an assumption (often about missing data or an unmeasured factor) until the conclusion "tips." Report the value at which it tips and judge whether that value is plausible. A general technique; the E-value is essentially a tipping-point for confounding strength.</dd>
+
+  <dt>DML <span class="alt">(double / debiased machine learning)</span></dt>
+  <dd>An estimation framework using flexible ML for nuisance functions while preserving valid inference for the causal target. Relevant here because the OVB/robustness-value machinery has been extended to it — so sensitivity analysis is not limited to linear regression.</dd>
+</dl>
+
+<footer>
+  Sources: VanderWeele &amp; Ding (2017, Ann Intern Med); Linden, Mathur &amp; VanderWeele (2020, Stata J);
+  Cinelli &amp; Hazlett (2020, JRSS-B); Chernozhukov et al. (2026, REStat).
+  · This is a living document — terms are added as lessons introduce them.
+</footer>
+</body>
+</html>

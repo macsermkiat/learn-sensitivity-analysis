@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 04 — The Robustness Value and Reading a Contour Plot</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6472; --rule:#e2e6ec; --accent:#3a5a8c;
+    --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
+    --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
+    --warnbg:#fff7e6; --warnrule:#e7c66a;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--bg); line-height:1.6;
+    max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
+  }
+  .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.82rem; margin-bottom:1.6rem; padding-bottom:.8rem; border-bottom:1px solid var(--rule); flex-wrap:wrap}
+  .lnav a{color:var(--accent); text-decoration:none; padding:.32rem .6rem; border:1px solid var(--rule);
+    border-radius:999px; background:#fff}
+  .lnav a:hover{background:var(--chip)}
+  .lnav .spacer{flex:1}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
+  h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
+  .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
+     color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
+  h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
+  p{margin:.7rem 0}
+  em{color:var(--term); font-style:italic}
+  strong{color:var(--ink)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85em;
+    background:var(--chip); padding:.08em .35em; border-radius:4px}
+  .formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:1rem;
+    background:#fff; border:1px solid var(--rule); border-radius:8px; padding:.9rem 1.1rem;
+    text-align:center; margin:1rem 0}
+  .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
+    padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
+  .callout b{color:#8a6d1a}
+  a{color:var(--accent)}
+  .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
+  .tool{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.2rem 1.3rem; margin:1.4rem 0}
+  .tool h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .8rem; color:var(--term)}
+  .tool .row{display:flex; gap:.8rem; align-items:center; flex-wrap:wrap; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem; margin:.5rem 0}
+  input[type=range]{flex:1; min-width:160px}
+  #plotwrap{margin:.4rem 0; width:100%}
+  canvas{width:100%; height:auto; display:block; border:1px solid var(--rule); border-radius:8px; background:#fff}
+  .legend{display:flex; gap:1rem; flex-wrap:wrap; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.78rem; color:var(--muted); margin-top:.5rem}
+  .legend i{display:inline-block; width:.8rem; height:.8rem; border-radius:3px; margin-right:.3rem; vertical-align:-1px}
+  .out{margin-top:.9rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem; color:var(--muted); line-height:1.5}
+  .out b{color:var(--term)}
+  .big{font-size:1.5rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums}
+  .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
+    padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
+  .q label:hover{background:var(--chip)}
+  .q input{margin-right:.5rem}
+  .fb{display:none; margin-top:.7rem; padding:.6rem .8rem; border-radius:7px; font-size:.9rem;
+    font-family:ui-sans-serif,system-ui,sans-serif; line-height:1.5}
+  .fb.show{display:block}
+  .fb.ok{background:var(--goodbg); border:1px solid #a6d9bd; color:var(--good)}
+  .fb.no{background:var(--badbg); border:1px solid #e3b3b3; color:var(--bad)}
+  .score{font-family:ui-sans-serif,system-ui,sans-serif; font-weight:700; color:var(--term); margin-top:.6rem}
+  footer{margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--rule);
+    color:var(--muted); font-size:.85rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .next{background:var(--chip); border-radius:8px; padding:.9rem 1.1rem; margin-top:1.4rem; font-size:.9rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  @media print{ body{background:#fff; max-width:none; padding:1rem} .lnav{display:none} .tool,.q{break-inside:avoid} }
+</style>
+</head>
+<body>
+<nav class="lnav">
+  <a href="../index.html">Home</a>
+  <a href="../reference/glossary.html">Glossary</a>
+  <span class="spacer"></span>
+  <a href="0003-rosenbaum-gamma-bounds.html">‹ L03</a>
+  <a href="0005-negative-controls.html">L05 ›</a>
+</nav>
+
+<header>
+  <div class="kicker">Lesson 04 · Sensitivity Analysis for Causal Inference</div>
+  <h1>The Robustness Value &amp; Reading a Contour Plot</h1>
+  <div class="mission">Mission tie-in: this is the skill the mission singles out — reading an OVB contour plot and a robustness value from sensemakr / dml.sensemakr output and saying what it implies. The same reading transfers from linear regression to causal ML.</div>
+</header>
+
+<h2><span class="n">1</span>Two numbers describe any confounder</h2>
+<p>The E-value works on the risk-ratio scale. Cinelli &amp; Hazlett re-cast the same idea in regression terms, which is what most causal-ML output speaks.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a> Any unobserved confounder <code>U</code> is summarised by two <em>partial R²</em> values:</p>
+<div class="formula">R²<sub>D~U</sub> = share of leftover variation in <b>treatment</b> that U explains<br>R²<sub>Y~U</sub> = share of leftover variation in <b>outcome</b> that U explains</div>
+<p>Given those two, the worst-case bias on the estimate is pinned down. That is the same two-leg logic as the E-value (treatment leg × outcome leg) — now scale-free and directly comparable to the covariates you already fitted.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+
+<h2><span class="n">2</span>The robustness value collapses it to one number</h2>
+<p>For a quick headline, assume the confounder is equally strong on both legs and ask: how large must that shared partial R² be to drag the estimate to the null? That single number is the <em>robustness value</em>.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+<div class="callout"><b>Read RV like this.</b> <code>RV = 0.15</code> means a confounder explaining <strong>15% of the residual variation in both treatment and outcome</strong> would erase the result. Near 0 = fragile; near 1 = only an all-explaining confounder could do it. There is also an <code>RV</code> for the <em>significance boundary</em> (the analogue of L01's CI-limit E-value) — always read both.</div>
+
+<h2><span class="n">3</span>The contour plot — the skill that pays the rent</h2>
+<p>The contour plot is the two-number picture. Treatment-leg strength on the x-axis, outcome-leg strength on the y-axis; the curves show what the estimate becomes for each combination. The bold curve is where the estimate hits the null. <strong>Your measured covariates are plotted as reference dots</strong> — so you read robustness by comparison, not in the abstract.<a class="cite" href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">[1]</a></p>
+
+<div class="tool">
+  <h3>Try it — read a contour plot</h3>
+  <div id="plotwrap"><canvas id="cv" width="600" height="470"></canvas></div>
+  <div class="legend">
+    <span><i style="background:#cfe8da"></i>result survives</span>
+    <span><i style="background:#f0c9c9"></i>result killed (crosses null)</span>
+    <span><i style="background:#b03333"></i>null curve (estimate = 0)</span>
+    <span><i style="background:#27406b"></i>your strongest measured covariate Z</span>
+  </div>
+  <div class="row">
+    <label for="mult">Hypothesised confounder = </label>
+    <input id="mult" type="range" min="0" max="6" step="0.1" value="1">
+    <span class="big" id="multv">1.0</span><span>× covariate Z</span>
+  </div>
+  <div class="out" id="out"></div>
+</div>
+<p style="font-size:.82rem;color:var(--muted)">Schematic plot built from the Cinelli &amp; Hazlett bias factor for illustration; production output (<code>sensemakr</code>) uses the exact estimate and reports the RV numerically. The <em>reading skill</em> is identical.</p>
+
+<h2><span class="n">4</span>Why this is the causal-ML bridge</h2>
+<p>The decisive point for the mission: this machinery is no longer tied to linear regression. Chernozhukov, Cinelli and colleagues extended omitted-variable-bias sensitivity to <em>double/debiased machine learning</em>, so an ATE estimated with flexible ML still gets a robustness value and a contour plot.<a class="cite" href="https://carloscinelli.com/files/Chernozhukov%20et%20al%20-%20OVB%20for%20ML.pdf" target="_blank">[2]</a> The package <code>dml.sensemakr</code> produces output you read exactly as above.<a class="cite" href="https://github.com/carloscinelli/dml.sensemakr" target="_blank">[3]</a></p>
+<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Transfer.</b> When a causal-ML paper shows an "Austen plot" or a robustness value for its DML estimate, it is the same two-leg, benchmark-against-covariates reading you just practised — not a new skill to learn.</div>
+
+<h2><span class="n">5</span>Check yourself</h2>
+<p>Pick an answer — feedback is immediate.</p>
+
+<div class="q" id="q1" data-correct="b">
+  <div class="stem">A DML study reports <code>RV = 0.03</code>. The strongest measured covariate has partial-R² of about 0.08 on each leg. Robust?</div>
+  <label><input type="radio" name="q1" value="a"> Yes — RV &gt; 0 means confounding can't overturn it.</label>
+  <label><input type="radio" name="q1" value="b"> Fragile — a confounder weaker than a covariate you already adjusted for (0.03 &lt; 0.08) would kill it.</label>
+  <label><input type="radio" name="q1" value="c"> Need the risk ratio to judge.</label>
+  <div class="fb" id="fb1"></div>
+</div>
+
+<div class="q" id="q2" data-correct="c">
+  <div class="stem">On the contour plot, the bold curve represents…</div>
+  <label><input type="radio" name="q2" value="a"> the confidence interval.</label>
+  <label><input type="radio" name="q2" value="b"> the strength of the measured covariates.</label>
+  <label><input type="radio" name="q2" value="c"> the (treatment-leg, outcome-leg) combinations at which the adjusted estimate equals the null.</label>
+  <div class="fb" id="fb2"></div>
+</div>
+
+<div class="q" id="q3" data-correct="a">
+  <div class="stem">A covariate dot sits far <em>inside</em> the "result killed" region (past the null curve). What does that tell you?</div>
+  <label><input type="radio" name="q3" value="a"> An unmeasured confounder merely as strong as that one measured covariate would already nullify the result — fragile.</label>
+  <label><input type="radio" name="q3" value="b"> The covariate is mismeasured.</label>
+  <label><input type="radio" name="q3" value="c"> The result is robust, since the covariate was adjusted for.</label>
+  <div class="fb" id="fb3"></div>
+</div>
+
+<div class="q" id="q4" data-correct="b">
+  <div class="stem">Why does the robustness-value / contour framework matter specifically for causal ML?</div>
+  <label><input type="radio" name="q4" value="a"> ML estimates can't be confounded, so it's just a formality.</label>
+  <label><input type="radio" name="q4" value="b"> OVB sensitivity was extended to DML, so flexible ML estimates get the same RV + contour reading as linear models.</label>
+  <label><input type="radio" name="q4" value="c"> It replaces the need for any causal assumptions in ML.</label>
+  <div class="fb" id="fb4"></div>
+</div>
+
+<div class="score" id="score"></div>
+
+<div class="next">
+  <strong>Your win:</strong> you can read a robustness value, find the null curve on a contour plot, and judge robustness by benchmarking against measured covariates — for linear models <em>and</em> DML output. That is the core mission skill.<br><br>
+  <strong>Ask your teacher (me) anything:</strong> want to read a real <code>sensemakr</code> table, or see how the RV relates back to the E-value numerically? Ask.<br><br>
+  <strong>Next lesson (L05):</strong> negative controls — the design-based <em>detector</em> that complements every calibration method you've now met.
+</div>
+
+<footer>
+  <strong>Sources</strong><br>
+  [1] <a href="https://carloscinelli.com/files/Cinelli%20and%20Hazlett%20-%20OVB%20for%20IV.pdf" target="_blank">Cinelli &amp; Hazlett (2020), Making Sense of Sensitivity: Extending Omitted Variable Bias, JRSS-B</a> — partial R², robustness value, contour plots.<br>
+  [2] <a href="https://carloscinelli.com/files/Chernozhukov%20et%20al%20-%20OVB%20for%20ML.pdf" target="_blank">Chernozhukov, Cinelli, Newey, Sharma &amp; Syrgkanis (2026), Long Story Short: OVB in Causal Machine Learning, REStat.</a><br>
+  [3] <a href="https://github.com/carloscinelli/dml.sensemakr" target="_blank">dml.sensemakr — reference implementation + vignettes.</a><br>
+  See also <code>reference/glossary.html</code> — "Partial R²," "Robustness value," "Contour / Austen plot," "DML."
+</footer>
+
+<script>
+  // ---- Interactive contour plot (schematic, faithful to the OVB bias factor) ----
+  var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+  var multEl = document.getElementById('mult'), multV = document.getElementById('multv'), out = document.getElementById('out');
+  var RMAX = 0.5;                 // axis range for both partial R^2
+  var SCALE = 6.146;              // se*sqrt(dof) / estimate, tuned so RV ~ 0.15
+  var benchD = 0.05, benchY = 0.10;   // measured covariate Z partial-R^2 (treatment, outcome legs)
+  var pad = {l:54, r:14, t:14, b:46};
+
+  function biasFactor(rd, ry){ return Math.sqrt((rd*ry)/(1-rd)); }   // Cinelli-Hazlett BF
+  function adjusted(rd, ry){ return 1 - biasFactor(rd, ry)*SCALE; }  // estimate normalised to 1
+
+  function layout(){
+    var w = cv.clientWidth || 600;
+    var dpr = window.devicePixelRatio || 1;
+    var hCss = Math.round(w*0.78);
+    cv.width = Math.round(w*dpr); cv.height = Math.round(hCss*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {w:w, h:hCss};
+  }
+  function xPix(rd, L){ return pad.l + rd/RMAX*(L.w-pad.l-pad.r); }
+  function yPix(ry, L){ return (L.h-pad.b) - ry/RMAX*(L.h-pad.t-pad.b); }
+
+  function draw(){
+    var L = layout();
+    var pw = L.w-pad.l-pad.r, ph = L.h-pad.t-pad.b;
+    // shade survive/kill regions by sampling a grid
+    var step = 4;
+    for(var px=0; px<pw; px+=step){
+      for(var py=0; py<ph; py+=step){
+        var rd = px/pw*RMAX, ry = (ph-py)/ph*RMAX;
+        var a = adjusted(rd, ry);
+        ctx.fillStyle = a>0 ? 'rgba(120,190,150,'+Math.min(.5,.12+a*.4)+')'
+                            : 'rgba(190,80,80,'+Math.min(.5,.12+(-a)*.4)+')';
+        ctx.fillRect(pad.l+px, pad.t+py, step, step);
+      }
+    }
+    // null curve: adjusted = 0  ->  ry = (1-rd)/(SCALE^2 * rd)
+    ctx.strokeStyle = '#b03333'; ctx.lineWidth = 2.5; ctx.beginPath();
+    var started=false;
+    for(var i=0;i<=200;i++){
+      var rd = 0.001 + i/200*(RMAX-0.001);
+      var ry = (1-rd)/(SCALE*SCALE*rd);
+      if(ry>RMAX || ry<0) { started=false; continue; }
+      var X=xPix(rd,L), Y=yPix(ry,L);
+      if(!started){ ctx.moveTo(X,Y); started=true; } else ctx.lineTo(X,Y);
+    }
+    ctx.stroke();
+    // axes
+    ctx.strokeStyle='#9aa6b6'; ctx.lineWidth=1; ctx.beginPath();
+    ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,L.h-pad.b); ctx.lineTo(L.w-pad.r,L.h-pad.b); ctx.stroke();
+    ctx.fillStyle='#5b6472'; ctx.font='12px ui-sans-serif,system-ui,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('treatment-leg strength  R²(D~U) →', pad.l+pw/2, L.h-12);
+    ctx.save(); ctx.translate(16, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('outcome-leg strength  R²(Y~U) →',0,0); ctx.restore();
+    // benchmark covariate Z
+    var bx=xPix(benchD,L), by=yPix(benchY,L);
+    ctx.fillStyle='#27406b'; ctx.beginPath(); ctx.arc(bx,by,5,0,7); ctx.fill();
+    ctx.textAlign='left'; ctx.fillText('Z (measured)', bx+8, by-6);
+    // hypothesised confounder marker
+    var k = parseFloat(multEl.value);
+    var hd = Math.min(benchD*k, RMAX-0.002), hy = Math.min(benchY*k, RMAX-0.002);
+    var hx=xPix(hd,L), hyp=yPix(hy,L);
+    var survives = adjusted(hd,hy) > 0;
+    ctx.fillStyle = survives ? '#1f7a4d' : '#b03333';
+    ctx.beginPath(); ctx.arc(hx,hyp,6,0,7); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+    // report
+    multV.textContent = k.toFixed(1);
+    out.innerHTML = 'A confounder <b>'+k.toFixed(1)+'× as strong as Z</b> on each leg lands '+
+      (survives ? 'in the <b style="color:#1f7a4d">survive</b> zone — the estimate stays on the same side of the null.'
+                : 'in the <b style="color:#b03333">killed</b> zone — it has crossed the null curve and would overturn the result.')+
+      '<br><b>How to judge robustness:</b> ask what multiple of your strongest measured covariate it takes to reach the red curve. A small multiple = fragile; needing many × = robust.';
+  }
+  multEl.addEventListener('input', draw);
+  window.addEventListener('resize', draw);
+  draw();
+
+  // ---- Quiz ----
+  var explain = {
+    q1:{ ok:'Correct. RV is benchmarked, not absolute: 0.03 is below the 0.08 of a covariate you already adjusted for, so a comparable unmeasured confounder would nullify it. Fragile.',
+         no:'Benchmark it: RV 0.03 is weaker than the 0.08 covariate you already fit, so an equally ordinary confounder kills the result. Answer (b).' },
+    q2:{ ok:'Correct. The bold curve is the locus of (treatment-leg, outcome-leg) strengths that bring the adjusted estimate exactly to the null.',
+         no:'The bold curve is the null contour: every point on it drives the estimate to zero. Not a CI and not the covariates. Answer (c).' },
+    q3:{ ok:'Correct. If a measured covariate sits past the null curve, an unmeasured confounder no stronger than it would already overturn the result — a textbook fragile finding.',
+         no:'A covariate dot beyond the null curve means a confounder of that ordinary strength suffices to kill the result — fragile. Answer (a).' },
+    q4:{ ok:'Correct. Chernozhukov et al. extended OVB sensitivity to DML, so the RV + contour reading applies unchanged to flexible ML estimates.',
+         no:'ML estimates are still confounded; the point is that OVB sensitivity now extends to DML, giving the same RV + contour reading. Answer (b).' }
+  };
+  var answered = {};
+  function grade(qid){
+    var q = document.getElementById(qid), correct = q.getAttribute('data-correct');
+    var sel = q.querySelector('input:checked'); if(!sel) return;
+    var fb = document.getElementById('fb'+qid.slice(1));
+    var isOk = sel.value === correct; answered[qid] = isOk;
+    fb.className = 'fb show ' + (isOk ? 'ok' : 'no');
+    fb.innerHTML = isOk ? explain[qid].ok : explain[qid].no;
+    var keys = Object.keys(answered);
+    if(keys.length === 4){
+      var right = keys.filter(function(k){return answered[k];}).length;
+      document.getElementById('score').textContent =
+        'Score: ' + right + ' / 4' + (right === 4 ? '  — you can read a contour plot and an RV. On to L05.' : '  — replay the contour tool, then retry the misses.');
+    }
+  }
+  ['q1','q2','q3','q4'].forEach(function(qid){
+    document.querySelectorAll('input[name='+qid+']').forEach(function(inp){
+      inp.addEventListener('change', function(){ grade(qid); });
+    });
+  });
+</script>
+</body>
+</html>

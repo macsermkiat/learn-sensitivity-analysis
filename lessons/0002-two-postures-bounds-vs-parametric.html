@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 02 — Two Postures: Worst-Case Bounds vs Parametric Sensitivity</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6472; --rule:#e2e6ec; --accent:#3a5a8c;
+    --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8;
+    --good:#1f7a4d; --goodbg:#e8f6ee; --bad:#b03333; --badbg:#fbecec;
+    --warnbg:#fff7e6; --warnrule:#e7c66a;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--bg); line-height:1.6;
+    max-width:780px; margin:0 auto; padding:1.4rem 1.5rem 5rem;
+  }
+  .lnav{display:flex; align-items:center; gap:.5rem; font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.82rem; margin-bottom:1.6rem; padding-bottom:.8rem; border-bottom:1px solid var(--rule); flex-wrap:wrap}
+  .lnav a{color:var(--accent); text-decoration:none; padding:.32rem .6rem; border:1px solid var(--rule);
+    border-radius:999px; background:#fff}
+  .lnav a:hover{background:var(--chip)}
+  .lnav .spacer{flex:1}
+  header{border-bottom:2px solid var(--ink); padding-bottom:1.2rem; margin-bottom:2rem}
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
+  h1{font-size:2rem; margin:.35rem 0 .5rem; line-height:1.12}
+  .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.85rem; color:var(--muted);
+    background:var(--chip); border-left:3px solid var(--accent); padding:.6rem .85rem; border-radius:0 6px 6px 0}
+  h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.15rem; margin:2.6rem 0 .6rem;
+     color:var(--term); border-bottom:1px solid var(--rule); padding-bottom:.3rem}
+  h2 .n{color:var(--accent); font-variant-numeric:tabular-nums; margin-right:.5rem}
+  p{margin:.7rem 0}
+  em{color:var(--term); font-style:italic}
+  strong{color:var(--ink)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85em;
+    background:var(--chip); padding:.08em .35em; border-radius:4px}
+  .callout{background:var(--warnbg); border:1px solid var(--warnrule); border-radius:8px;
+    padding:.85rem 1.1rem; margin:1.2rem 0; font-size:.95rem}
+  .callout b{color:#8a6d1a}
+  a{color:var(--accent)}
+  .cite{font-size:.8rem; vertical-align:super; text-decoration:none; color:var(--accent); font-family:ui-sans-serif,system-ui,sans-serif}
+  /* two-column compare table */
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:.9rem; margin:1.3rem 0}
+  .compare .card{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1rem 1.1rem}
+  .compare h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .5rem; color:var(--term)}
+  .compare ul{margin:.3rem 0 0; padding-left:1.1rem; font-size:.9rem}
+  .compare li{margin:.3rem 0}
+  .tag{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.68rem; letter-spacing:.08em;
+    text-transform:uppercase; font-weight:700; color:var(--accent); display:block; margin-bottom:.2rem}
+  @media (max-width:560px){ .compare{grid-template-columns:1fr} }
+  /* spectrum tool */
+  .tool{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.2rem 1.3rem; margin:1.4rem 0}
+  .tool h3{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.95rem; margin:0 0 .8rem; color:var(--term)}
+  .tool .row{display:flex; gap:.8rem; align-items:center; flex-wrap:wrap; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem}
+  input[type=range]{flex:1; min-width:180px}
+  .barwrap{margin-top:1rem}
+  .axis{position:relative; height:46px; background:linear-gradient(90deg,#eef2f8,#dde7f4); border:1px solid var(--rule); border-radius:8px}
+  .nullline{position:absolute; top:-6px; bottom:-6px; left:50%; width:2px; background:var(--bad)}
+  .nulllabel{position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-size:.72rem; color:var(--bad); font-family:ui-sans-serif,system-ui,sans-serif}
+  .interval{position:absolute; top:14px; height:16px; background:rgba(58,90,140,.30); border:1px solid var(--accent); border-radius:4px}
+  .point{position:absolute; top:8px; width:2px; height:28px; background:var(--term)}
+  .out{margin-top:1rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem; color:var(--muted); line-height:1.5}
+  .out b{color:var(--term)}
+  /* quiz */
+  .q{background:#fff; border:1px solid var(--rule); border-radius:10px; padding:1.1rem 1.3rem; margin:1.1rem 0}
+  .q .stem{font-weight:600; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.96rem; margin-bottom:.7rem}
+  .q label{display:block; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.92rem;
+    padding:.45rem .6rem; border:1px solid transparent; border-radius:7px; cursor:pointer; margin:.2rem 0}
+  .q label:hover{background:var(--chip)}
+  .q input{margin-right:.5rem}
+  .fb{display:none; margin-top:.7rem; padding:.6rem .8rem; border-radius:7px; font-size:.9rem;
+    font-family:ui-sans-serif,system-ui,sans-serif; line-height:1.5}
+  .fb.show{display:block}
+  .fb.ok{background:var(--goodbg); border:1px solid #a6d9bd; color:var(--good)}
+  .fb.no{background:var(--badbg); border:1px solid #e3b3b3; color:var(--bad)}
+  .score{font-family:ui-sans-serif,system-ui,sans-serif; font-weight:700; color:var(--term); margin-top:.6rem}
+  footer{margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--rule);
+    color:var(--muted); font-size:.85rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  .next{background:var(--chip); border-radius:8px; padding:.9rem 1.1rem; margin-top:1.4rem; font-size:.9rem; font-family:ui-sans-serif,system-ui,sans-serif}
+  @media print{
+    body{background:#fff; max-width:none; padding:1rem}
+    .lnav{display:none} .tool,.q{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<nav class="lnav">
+  <a href="../index.html">Home</a>
+  <a href="../reference/glossary.html">Glossary</a>
+  <span class="spacer"></span>
+  <a href="0001-what-sensitivity-analysis-asks.html">‹ L01</a>
+  <a href="0003-rosenbaum-gamma-bounds.html">L03 ›</a>
+</nav>
+
+<header>
+  <div class="kicker">Lesson 02 · Sensitivity Analysis for Causal Inference</div>
+  <h1>Two Postures: Worst-Case Bounds vs Parametric Sensitivity</h1>
+  <div class="mission">Mission tie-in: to "name the families and say when each applies," you first need the top-level split. Every method you'll meet — including the E-value from L01 — sits on one spectrum. Place a method on it and you already half-understand it.</div>
+</header>
+
+<h2><span class="n">1</span>One assumption, two ways to react to losing it</h2>
+<p>L01 fixed the core move: stop asking "is there unmeasured confounding?" and start asking "how much would it take to overturn the result?" There are exactly two honest ways to answer once you admit conditional ignorability might fail.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">[2]</a></p>
+<div class="compare">
+  <div class="card">
+    <span class="tag">Posture A — drop the assumption</span>
+    <h3>Worst-case bounds</h3>
+    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Assume <em>nothing</em> about selection. Ask: what is the full range of effects still consistent with the data?</p>
+    <ul>
+      <li>Output is an <strong>interval</strong>, not a number.</li>
+      <li>Honest and assumption-free.</li>
+      <li>Usually <strong>wide</strong> — often spans the null, so "uninformative."</li>
+      <li>Canonical: Manski's nonparametric bounds.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <span class="tag">Posture B — calibrate the violation</span>
+    <h3>Parametric / "how-much" SA</h3>
+    <p style="font-size:.9rem;margin:.2rem 0 .4rem">Keep a model of the bias, dial a confounder's strength, and read off where the estimate moves.</p>
+    <ul>
+      <li>Output is a <strong>threshold</strong> ("strength needed to tip").</li>
+      <li>Crisp and actionable.</li>
+      <li>Requires <strong>judgement</strong>: is that strength plausible?</li>
+      <li>Canonical: E-value, robustness value, Rosenbaum Γ.</li>
+    </ul>
+  </div>
+</div>
+<div class="callout"><b>The spectrum.</b> Picture a dial. Far left: <em>no assumptions</em> — wide, bullet-proof, often useless. Far right: <em>strong parametric assumptions</em> — narrow, precise, only as trustworthy as the assumptions. Every method is a choice of where to stand. A good paper states where, and why.</div>
+
+<h2><span class="n">2</span>Worst-case bounds, concretely</h2>
+<p>Manski's insight: even with <em>zero</em> assumptions about who got treated, the data plus the logical range of the outcome pin the average effect to an interval.<a class="cite" href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">[1]</a> You observe outcomes only under the treatment each unit actually received; the counterfactual arm is filled in with its most extreme admissible values to get the upper and lower edge.</p>
+<p>These bounds are <em>sharp</em> — you cannot narrow them without adding an assumption — but for a binary or bounded outcome they are typically wide enough to straddle zero. That is not a failure; it is the honest statement of how little the data alone can say. You then <strong>buy</strong> a narrower interval with assumptions: monotone treatment response, monotone selection, or an instrument.<a class="cite" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">[2]</a></p>
+
+<div class="tool">
+  <h3>Try it — how assumptions narrow the bounds</h3>
+  <div class="row">
+    <label for="asm">Assumptions added:</label>
+    <input id="asm" type="range" min="0" max="3" step="1" value="0">
+    <span id="asmlab" style="font-weight:700;color:var(--term)">none</span>
+  </div>
+  <div class="barwrap">
+    <div class="axis">
+      <div class="nulllabel">no effect</div>
+      <div class="nullline"></div>
+      <div class="interval" id="iv"></div>
+      <div class="point" id="pt" title="true (unknown) effect"></div>
+    </div>
+  </div>
+  <div class="out" id="out"></div>
+</div>
+
+<h2><span class="n">3</span>Where the E-value (and the rest) sit</h2>
+<p>The E-value is firmly Posture B. It does not bound the effect; it reports the confounder strength that would erase it — a calibrated tipping point.<a class="cite" href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">[3]</a> The whole right half of the spectrum shares that shape; they differ in <em>what</em> they dial and on which scale:</p>
+<div class="compare">
+  <div class="card">
+    <span class="tag">Analysis-based (calibrate a model)</span>
+    <h3>E-value · Robustness value</h3>
+    <ul>
+      <li>E-value dials a risk-ratio association on both legs (L01).</li>
+      <li>Robustness value dials partial-R² on both legs (L04).</li>
+      <li>Both work on any adjusted estimate, including ML.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <span class="tag">Design-based (exploit the design)</span>
+    <h3>Rosenbaum Γ · Negative controls</h3>
+    <ul>
+      <li>Γ dials departure from random assignment in matched sets (L03).</li>
+      <li>Negative controls detect a confounding footprint (L05).</li>
+      <li>Need a specific design (matching; a valid control variable).</li>
+    </ul>
+  </div>
+</div>
+<div class="callout" style="background:var(--chip);border-color:#c5d2e6"><b style="color:var(--term)">Reading reflex.</b> When you meet any sensitivity analysis, ask two questions in order: <strong>(1)</strong> Is it a <em>bound</em> (interval, no assumptions) or a <em>calibration</em> (threshold, assumed bias model)? <strong>(2)</strong> If calibration, is it <em>analysis-based</em> (E-value, RV) or <em>design-based</em> (Γ, negative control)? Those two answers locate the method and tell you what its number means.</div>
+
+<h2><span class="n">4</span>Check yourself</h2>
+<p>Classify each scenario by posture. Feedback is immediate.</p>
+
+<div class="q" id="q1" data-correct="a">
+  <div class="stem">A paper reports: "Under no assumptions about treatment selection, the ATE lies in [−0.04, 0.21]." Which posture?</div>
+  <label><input type="radio" name="q1" value="a"> Worst-case bounds (Posture A).</label>
+  <label><input type="radio" name="q1" value="b"> Parametric calibration (Posture B).</label>
+  <label><input type="radio" name="q1" value="c"> Neither — it's just a confidence interval.</label>
+  <div class="fb" id="fb1"></div>
+</div>
+
+<div class="q" id="q2" data-correct="b">
+  <div class="stem">"A confounder would need risk-ratio associations of 3.4 with both exposure and outcome to nullify the effect." Posture, and which sub-family?</div>
+  <label><input type="radio" name="q2" value="a"> Posture A, design-based.</label>
+  <label><input type="radio" name="q2" value="b"> Posture B, analysis-based calibration (this is an E-value).</label>
+  <label><input type="radio" name="q2" value="c"> Posture B, design-based (this is a Rosenbaum Γ).</label>
+  <div class="fb" id="fb2"></div>
+</div>
+
+<div class="q" id="q3" data-correct="c">
+  <div class="stem">A reviewer dismisses a Manski-bounds analysis: "The interval is so wide it includes zero — useless." Best response?</div>
+  <label><input type="radio" name="q3" value="a"> Agree; wide bounds mean the study failed.</label>
+  <label><input type="radio" name="q3" value="b"> The bounds must be miscomputed; correct bounds are always informative.</label>
+  <label><input type="radio" name="q3" value="c"> Width is the honest cost of making no assumptions; report it, then state which assumptions would narrow it and whether they're defensible.</label>
+  <div class="fb" id="fb3"></div>
+</div>
+
+<div class="q" id="q4" data-correct="b">
+  <div class="stem">Which statement about the spectrum is correct?</div>
+  <label><input type="radio" name="q4" value="a"> Narrower (more parametric) is always better — precision wins.</label>
+  <label><input type="radio" name="q4" value="b"> Moving right buys precision by spending assumptions; the result is only as trustworthy as those assumptions.</label>
+  <label><input type="radio" name="q4" value="c"> Bounds and parametric SA answer the same question, so the choice is cosmetic.</label>
+  <div class="fb" id="fb4"></div>
+</div>
+
+<div class="score" id="score"></div>
+
+<div class="next">
+  <strong>Your win:</strong> you can place any sensitivity analysis on the spectrum — bound vs calibration, and within calibration, analysis- vs design-based — which tells you what its number means before you read a single formula.<br><br>
+  <strong>Ask your teacher (me) anything:</strong> want to see real Manski bounds computed on a clinical dataset, or work through when monotone-selection is defensible? Just ask.<br><br>
+  <strong>Next lesson (L03):</strong> Rosenbaum Γ-bounds — the design-based calibration for matched studies, and the famous reason smoking→lung-cancer survives it.
+</div>
+
+<footer>
+  <strong>Sources</strong><br>
+  [1] <a href="https://ideas.repec.org/a/aea/aecrev/v80y1990i2p319-23.html" target="_blank">Manski (1990), Nonparametric Bounds on Treatment Effects, Am Econ Rev 80(2):319–323.</a><br>
+  [2] <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4317325/" target="_blank">Richardson, Hudgens, Gilbert &amp; Fine (2014), Nonparametric Bounds and Sensitivity Analysis of Treatment Effects, Statistical Science 29(4).</a><br>
+  [3] <a href="https://www.acpjournals.org/doi/10.7326/M17-1485" target="_blank">VanderWeele &amp; Ding (2017), Introducing the E-Value, Ann Intern Med 167:268–274.</a><br>
+  See also <code>reference/glossary.html</code> — "Worst-case bounds," "Sensitivity analysis," "Tipping-point analysis."
+</footer>
+
+<script>
+  // Spectrum tool: bounds narrow as assumptions are added.
+  var asm = document.getElementById('asm'), asmlab = document.getElementById('asmlab');
+  var iv = document.getElementById('iv'), pt = document.getElementById('pt'), out = document.getElementById('out');
+  // axis maps effect in [-1,1] to 0..100%; null (0) sits at 50%.
+  var levels = [
+    {lab:'none (worst-case)', lo:-0.55, hi:0.85,
+     say:'Pure Manski bounds. No assumption about who was treated. The interval straddles <b>no effect</b>, so the data alone cannot sign the effect &mdash; honest, not broken.'},
+    {lab:'+ monotone treatment response', lo:-0.10, hi:0.78,
+     say:'Assume treatment never <em>hurts</em> anyone. The lower edge lifts toward zero; still crosses, but tighter.'},
+    {lab:'+ monotone selection', lo:0.06, hi:0.70,
+     say:'Also assume sicker patients were more likely treated. Now the interval clears <b>no effect</b> &mdash; a signed conclusion, bought with two assumptions you must defend.'},
+    {lab:'+ instrument', lo:0.30, hi:0.58,
+     say:'Add a valid instrument. Tight, decision-grade interval &mdash; but it now rests on the IV exclusion restriction. Maximum precision, maximum assumption load.'}
+  ];
+  function pctOf(x){ return (x + 1) / 2 * 100; }
+  function refresh(){
+    var L = levels[+asm.value];
+    asmlab.textContent = L.lab;
+    var lo = pctOf(L.lo), hi = pctOf(L.hi);
+    iv.style.left = lo + '%'; iv.style.width = (hi - lo) + '%';
+    pt.style.left = pctOf(0.42) + '%'; // the unknown "truth"
+    var crosses = L.lo < 0 && L.hi > 0;
+    out.innerHTML = L.say + '<br><b>Reads as:</b> ' + (crosses
+      ? 'effect <b>not signed</b> (interval includes no-effect).'
+      : 'effect <b>signed</b> (interval excludes no-effect) &mdash; conclusion is identified <em>given the assumptions</em>.');
+  }
+  asm.addEventListener('input', refresh); refresh();
+
+  // Quiz engine
+  var explain = {
+    q1:{ ok:'Correct. "No assumptions about selection" + an interval output = Manski-style worst-case bounds, Posture A. Note it includes 0, which is the honest cost.',
+         no:'Look for the tells: <em>no assumptions</em> + an <em>interval</em> (not a single estimate with sampling error). That is worst-case bounds, answer (a).' },
+    q2:{ ok:'Correct. A risk-ratio strength needed to nullify, on both legs, is the E-value definition (L01): Posture B, analysis-based calibration.',
+         no:'A confounder strength that would tip the result is a calibration (Posture B). "Risk-ratio on both legs" is specifically the E-value &mdash; analysis-based. Answer (b).' },
+    q3:{ ok:'Correct. Width is the price of zero assumptions, not an error. The right move is to report it and then say which assumptions would tighten it and whether they hold.',
+         no:'Wide bounds are not a bug &mdash; they are the honest statement of what the data alone support. The professional response is (c): report, then name the assumptions that would narrow them.' },
+    q4:{ ok:'Correct. Precision on the right of the spectrum is purchased with assumptions; the conclusion inherits their credibility.',
+         no:'Narrower is not free: moving right spends assumptions, and the result is only as good as they are. Answer (b).' }
+  };
+  var answered = {};
+  function grade(qid){
+    var q = document.getElementById(qid);
+    var correct = q.getAttribute('data-correct');
+    var sel = q.querySelector('input:checked'); if(!sel) return;
+    var fb = document.getElementById('fb'+qid.slice(1));
+    var isOk = sel.value === correct; answered[qid] = isOk;
+    fb.className = 'fb show ' + (isOk ? 'ok' : 'no');
+    fb.textContent = isOk ? explain[qid].ok : explain[qid].no;
+    if(isOk){ fb.innerHTML = explain[qid].ok; } else { fb.innerHTML = explain[qid].no; }
+    var keys = Object.keys(answered);
+    if(keys.length === 4){
+      var right = keys.filter(function(k){return answered[k];}).length;
+      document.getElementById('score').textContent =
+        'Score: ' + right + ' / 4' + (right === 4 ? '  — you can place any method on the spectrum. On to L03.' : '  — re-read the spectrum callout, then retry the misses.');
+    }
+  }
+  ['q1','q2','q3','q4'].forEach(function(qid){
+    document.querySelectorAll('input[name='+qid+']').forEach(function(inp){
+      inp.addEventListener('change', function(){ grade(qid); });
+    });
+  });
+</script>
+</body>
+</html>

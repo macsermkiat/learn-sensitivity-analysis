@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensitivity Analysis for Causal Inference — a short course</title>
+<meta name="description" content="A short, interactive course on reading and critiquing sensitivity analyses in clinical real-world-data and causal-ML studies.">
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6472; --rule:#e2e6ec; --accent:#3a5a8c;
+    --bg:#fbfcfd; --term:#27406b; --chip:#eef2f8; --done:#1f7a4d;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--bg); line-height:1.6;
+    max-width:820px; margin:0 auto; padding:2.2rem 1.2rem 5rem;
+  }
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.7rem; color:var(--accent); font-weight:700}
+  h1{font-size:2.1rem; line-height:1.1; margin:.35rem 0 .6rem}
+  .lede{font-size:1.05rem; color:var(--muted); margin:0 0 1.2rem; max-width:60ch}
+  .mission{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem; color:var(--ink);
+    background:var(--chip); border-left:3px solid var(--accent); padding:.8rem 1rem; border-radius:0 8px 8px 0; margin:1.2rem 0 2rem}
+  .mission b{color:var(--term)}
+  h2{font-family:ui-sans-serif,system-ui,sans-serif; font-size:1.05rem; color:var(--term);
+     border-bottom:1px solid var(--rule); padding-bottom:.35rem; margin:2.4rem 0 1rem}
+  a{color:var(--accent)}
+  /* lesson cards */
+  .lessons{display:grid; gap:.8rem}
+  .card{display:block; text-decoration:none; color:inherit; background:#fff;
+    border:1px solid var(--rule); border-radius:12px; padding:1rem 1.15rem;
+    transition:border-color .12s, transform .12s, box-shadow .12s}
+  .card:hover{border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 14px rgba(40,64,107,.08)}
+  .card .top{display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap}
+  .num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.78rem; font-weight:700;
+    color:#fff; background:var(--accent); border-radius:6px; padding:.18rem .45rem}
+  .ttl{font-family:ui-sans-serif,system-ui,sans-serif; font-weight:700; font-size:1.02rem; color:var(--term)}
+  .card p{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem; color:var(--muted); margin:.45rem 0 0}
+  .skill{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.78rem; color:var(--accent); margin-top:.5rem; display:block}
+  /* families map */
+  .map{background:#fff; border:1px solid var(--rule); border-radius:12px; padding:1.1rem 1.2rem;
+    font-family:ui-sans-serif,system-ui,sans-serif; font-size:.88rem}
+  .map .row{display:flex; gap:.6rem; padding:.45rem 0; border-bottom:1px dashed var(--rule); align-items:baseline}
+  .map .row:last-child{border-bottom:none}
+  .map .lab{font-weight:700; color:var(--term); min-width:8.5rem}
+  .map .q{color:var(--muted)}
+  .pill{display:inline-block; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; font-weight:700;
+    border-radius:999px; padding:.12rem .5rem; margin-left:.3rem; vertical-align:1px}
+  .pill.calib{background:#e8eefa; color:#2f4f86}
+  .pill.bound{background:#fff1d9; color:#8a6d1a}
+  .pill.detect{background:#e8f6ee; color:var(--done)}
+  /* reference + how-to */
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:.8rem}
+  @media (max-width:560px){ .two{grid-template-columns:1fr} }
+  .mini{background:var(--chip); border-radius:10px; padding:.9rem 1rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:.88rem}
+  .mini h3{margin:0 0 .35rem; font-size:.92rem; color:var(--term)}
+  ol.how{font-family:ui-sans-serif,system-ui,sans-serif; font-size:.9rem; color:var(--ink); padding-left:1.2rem}
+  ol.how li{margin:.35rem 0}
+  footer{margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--rule);
+    color:var(--muted); font-size:.82rem; font-family:ui-sans-serif,system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="kicker">A short, interactive course</div>
+<h1>Sensitivity Analysis for Causal Inference</h1>
+<p class="lede">Read, compute, and critique the sensitivity analyses that appear in clinical real-world-data and causal-ML studies — so you can tell when "robust to unmeasured confounding" is earned, overstated, or missing.</p>
+
+<div class="mission">
+  <b>The mission.</b> Fluency, not implementation. Given any RWD paper, interpret its E-value, robustness value, Γ, bounds, or negative control; name the family it belongs to and when that family applies; and spot the standard misuses. Each lesson is one tangible win — tap, read, do the interactive check, then ask your teacher follow-ups.
+</div>
+
+<h2>Lessons</h2>
+<div class="lessons">
+  <a class="card" href="lessons/0001-what-sensitivity-analysis-asks.html">
+    <div class="top"><span class="num">L01</span><span class="ttl">What a Sensitivity Analysis Actually Asks</span></div>
+    <p>The reframe behind every method: not "is there confounding?" but "how strong would it have to be?" Plus the E-value — the number you'll see most — with a live calculator.</p>
+    <span class="skill">Skill · read, compute &amp; critique an E-value</span>
+  </a>
+  <a class="card" href="lessons/0002-two-postures-bounds-vs-parametric.html">
+    <div class="top"><span class="num">L02</span><span class="ttl">Two Postures: Worst-Case Bounds vs Parametric</span></div>
+    <p>The top-level map. Assumption-free bounds (Manski) vs calibrated "how-much-confounding" methods — and where the E-value sits on the spectrum.</p>
+    <span class="skill">Skill · place any method on the spectrum</span>
+  </a>
+  <a class="card" href="lessons/0003-rosenbaum-gamma-bounds.html">
+    <div class="top"><span class="num">L03</span><span class="ttl">Rosenbaum Γ-Bounds for Matched Designs</span></div>
+    <p>The design-based calibration for matched studies. Read a Γ, judge robustness — and avoid the trap of treating Γ (a treatment-leg dial) as the whole confounder strength.</p>
+    <span class="skill">Skill · interpret a Γ robustness statement</span>
+  </a>
+  <a class="card" href="lessons/0004-robustness-value-and-contour-plots.html">
+    <div class="top"><span class="num">L04</span><span class="ttl">The Robustness Value &amp; Contour Plots</span></div>
+    <p>The core mission skill: read an OVB contour plot and a robustness value, benchmark against measured covariates — for linear models and causal ML (sensemakr / dml.sensemakr) alike.</p>
+    <span class="skill">Skill · read an RV + contour plot (interactive plot)</span>
+  </a>
+  <a class="card" href="lessons/0005-negative-controls.html">
+    <div class="top"><span class="num">L05</span><span class="ttl">Negative Controls: the Design-Based Detector</span></div>
+    <p>The last family. A tripwire for "your pipeline is biased" — its two make-or-break assumptions, and why it detects confounding rather than quantifying it.</p>
+    <span class="skill">Skill · judge &amp; interpret negative controls</span>
+  </a>
+</div>
+
+<h2>The five families at a glance</h2>
+<div class="map">
+  <div class="row"><span class="lab">Worst-case bounds<span class="pill bound">bound</span></span><span class="q">What's the honest range of effects with <em>no</em> assumptions? (L02)</span></div>
+  <div class="row"><span class="lab">E-value<span class="pill calib">calibrate</span></span><span class="q">How strong (risk-ratio scale) must confounding be to overturn it? (L01)</span></div>
+  <div class="row"><span class="lab">Robustness value<span class="pill calib">calibrate</span></span><span class="q">Same question on the partial-R² scale; extends to causal ML. (L04)</span></div>
+  <div class="row"><span class="lab">Rosenbaum Γ<span class="pill calib">calibrate</span></span><span class="q">Same question for matched designs, on the treatment-odds scale. (L03)</span></div>
+  <div class="row"><span class="lab">Negative controls<span class="pill detect">detect</span></span><span class="q">Is there a detectable <em>footprint</em> of confounding at all? (L05)</span></div>
+</div>
+
+<h2>Reference &amp; how to use this</h2>
+<div class="two">
+  <div class="mini">
+    <h3>Glossary</h3>
+    <p>Every term defined once, reused verbatim across lessons. Your quick-lookup spine.</p>
+    <p style="margin-top:.5rem"><a href="reference/glossary.html">Open the glossary →</a></p>
+  </div>
+  <div class="mini">
+    <h3>How to study</h3>
+    <ol class="how" style="margin:.2rem 0 0">
+      <li>Work lessons in order, L01 → L05.</li>
+      <li>Do every interactive check — feedback is instant.</li>
+      <li>Bring a real paper's sensitivity section to your teacher and critique it together.</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  Built as a self-paced teaching workspace. Sources are cited inline in every lesson — VanderWeele &amp; Ding (E-value), Manski / Richardson et al. (bounds), Rosenbaum (Γ), Cinelli &amp; Hazlett and Chernozhukov et al. (robustness value / causal ML), Lipsitch et al. (negative controls). This index and the lessons are static HTML — open locally or serve via GitHub Pages.
+</footer>
+</body>
+</html>
